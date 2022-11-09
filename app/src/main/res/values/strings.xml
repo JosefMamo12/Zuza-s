@@ -13,4 +13,9 @@
     <string name="register_user">REGISTER USER</string>
     <string name="enter_your_email">Enter Your Email</string>
     <string name="reset_password">Reset Password</string>
+    <string name="facebook_app_id">3018310431648249</string>
+    <string name="fb_login_protocol_scheme">fb3018310431648249</string>
+    <string name="facebook_client_token">48ec3cf223794ce4c9677cef67bca291</string>
+
+
 </resources>
