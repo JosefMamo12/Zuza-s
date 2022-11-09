@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,8 +25,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseAuth mAuth;
     FirebaseFirestore firestore;
-    private TextView register;
-    private EditText editTextFullName, editTextAge,editTextEmail,editTextPassword;
+    private TextView register,forgotPassword;
+    private EditText editTextEmail,editTextPassword;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,18 +34,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         firestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
+
+        forgotPassword = (TextView) findViewById(R.id.forgotPass);
+        forgotPassword.setOnClickListener(this);
+
         
         
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.register:
                 startActivity(new Intent(this,Register.class));
                 break;
+            case R.id.forgotPass:
+                startActivity(new Intent(this, ForgotPassword.class));
         }
+
     }
 }
