@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,8 +19,14 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +43,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView register,forgotPassword;
     private EditText editTextEmail,editTextPassword;
     private ImageView fbBtn,twiterBtn,googleBtn;
+    private Button login;
+
     CallbackManager callbackManager;
+    GoogleSignInOptions googleSignInOptions;
+    GoogleSignInClient googleSignInClient;
 
 
     
@@ -46,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         callbackManager = CallbackManager.Factory.create();
+        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        googleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
 
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -77,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fbBtn =(ImageView) findViewById(R.id.facebook);
         fbBtn.setOnClickListener(this);
 
+        googleBtn = (ImageView) findViewById(R.id.google);
+        googleBtn.setOnClickListener(this);
+
+        login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(this);
+
 
     }
 
@@ -92,13 +112,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.facebook:
                 LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
+                break;
+            case R.id.google:
+                signIn();
+                break;
+            case R.id.login:
+                startActivity(new Intent(this,LoginSuccess.class));
+                break;
+                
         }
 
     }
 
+    private void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent,1000);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1000){
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                task.getResult(ApiException.class);
+                navigateToSecondActivity();
+            }catch (ApiException e){
+                Toast.makeText(getApplicationContext(), "Somthing went worng", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void navigateToSecondActivity() {
+        finish();
+        Intent intent = new Intent(MainActivity.this, LoginSuccess.class);
+        startActivity(intent);
     }
 }
