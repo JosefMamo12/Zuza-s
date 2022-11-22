@@ -5,12 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginSuccess">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:src="@drawable/zuzalogo"
         android:background="#023020"
-        />
+        android:contentDescription="TODO" />
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,33 +24,50 @@
         tools:ignore="MissingConstraints">
 
         <ImageView
-            android:id="@+id/menu"
+            android:id="@+id/logInImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_login_36"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            tools:ignore="ContentDescription" />
+
+
+        <ImageView
+            android:id="@+id/menuImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_menu_24"
             android:layout_gravity="center"
-            android:padding="40dp"
-            />
+            android:padding="20dp"
+            tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/home"
+            android:id="@+id/homeImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_home_24"
             android:layout_gravity="center"
-            android:padding="40dp"
-            />
+            android:padding="20dp"
+            tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/menuFood"
+            android:id="@+id/menuFoodImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_restaurant_menu_24"
             android:layout_gravity="center"
-            android:padding="40dp"
-            />
+            android:padding="20dp"
+            tools:ignore="ContentDescription" />
 
-
+        <ImageView
+            android:id="@+id/settingImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_settings_36"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 </RelativeLayout>

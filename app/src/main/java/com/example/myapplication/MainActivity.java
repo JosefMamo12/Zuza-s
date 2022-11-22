@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 task.getResult(ApiException.class);
                 navigateToSecondActivity();
             }catch (ApiException e){
-                Toast.makeText(getApplicationContext(), "Somthing went worng", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         }
     }
