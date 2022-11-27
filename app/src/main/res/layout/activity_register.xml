@@ -4,37 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/zuzalogin"
     tools:context=".Register">
+<!--    android:background="@color/Black_Olive"-->
+
+
+    <!--    <TextView-->
+<!--        android:id="@+id/banner"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/zuza_s"-->
+<!--        android:textSize="60sp"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textColor="@color/Satin_Sheen_Gold"-->
+<!--        android:fontFamily="sans-serif-black"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        tools:ignore="MissingConstraints"-->
+<!--        />-->
 
     <TextView
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/zuza_s"
-        android:textSize="60sp"
-        android:textAlignment="center"
+        android:gravity="center"
+        android:text="@string/register"
+        android:textColor="@color/white"
+        android:textSize="35sp"
         android:textStyle="bold"
-        android:fontFamily="sans-serif-black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="50dp"
-        tools:ignore="MissingConstraints"
-        />
+        tools:layout_editor_absoluteX="15dp"
+        tools:layout_editor_absoluteY="84dp"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/fullName"
-        android:layout_marginTop="60dp"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/Rifle_Green"
+        android:drawablePadding="30dp"
         android:ems="10"
         android:hint="@string/full_name"
         android:inputType="text"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/banner"
 
+        app:layout_constraintTop_toBottomOf="@id/banner"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -42,10 +64,13 @@
         android:layout_marginTop="20dp"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:background="@color/Rifle_Green"
         android:ems="10"
         android:hint="@string/age"
         android:inputType="text"
         android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fullName"
@@ -56,10 +81,13 @@
         android:layout_marginTop="20dp"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:background="@color/Rifle_Green"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="text"
         android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/age"
@@ -71,10 +99,13 @@
         android:layout_marginTop="20dp"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:background="@color/Rifle_Green"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/email"
@@ -85,16 +116,17 @@
         android:id="@+id/registerUser"
         android:layout_width="380dp"
         android:layout_height="70dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/teal_200"
+        android:layout_marginTop="172dp"
+        android:backgroundTint="@color/Keppel"
         android:text="@string/register_user"
         android:textColor="#ffff"
         android:textSize="26sp"
         android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password"
 
+        app:layout_constraintTop_toBottomOf="@id/password"
         tools:ignore="MissingConstraints" />
 
     <ProgressBar
