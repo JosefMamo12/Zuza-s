@@ -14,61 +14,7 @@
         android:contentDescription="TODO" />
 
 
-    <include layout="@layout/nav_bar"></include>
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:background="#F2F3F5"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:gravity="center"-->
-<!--        tools:ignore="MissingConstraints">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/logInImg"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/ic_baseline_login_36"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:padding="20dp"-->
-<!--            tools:ignore="ContentDescription" />-->
-
-
-<!--        <ImageView-->
-<!--            android:id="@+id/menuImg"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/ic_baseline_menu_24"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:padding="20dp"-->
-<!--            tools:ignore="ContentDescription" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/homeImg"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/ic_baseline_home_24"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:padding="20dp"-->
-<!--            tools:ignore="ContentDescription" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/menuFoodImg"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/ic_baseline_restaurant_menu_24"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:padding="20dp"-->
-<!--            tools:ignore="ContentDescription" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/settingImg"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/ic_baseline_settings_36"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:padding="20dp"-->
-<!--            tools:ignore="ContentDescription" />-->
-<!--    </LinearLayout>-->
+    <include layout="@layout/navigation_bar" />
 
 </RelativeLayout>
 
