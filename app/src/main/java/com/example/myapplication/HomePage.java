@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageView;
 
-public class LoginSuccess extends AppCompatActivity {
+public class HomePage extends AppCompatActivity {
 
     ImageView login,menu,settings,foodMenu;
 
@@ -16,7 +14,7 @@ public class LoginSuccess extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_success);
+        setContentView(R.layout.activity_homepage);
 
 
         menu = (ImageView) findViewById(R.id.menuImg);

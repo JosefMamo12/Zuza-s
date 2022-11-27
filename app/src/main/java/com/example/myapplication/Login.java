@@ -1,12 +1,10 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,19 +22,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     FirebaseFirestore firestore;
@@ -55,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         callbackManager = CallbackManager.Factory.create();
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
@@ -65,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        startActivity(new Intent(MainActivity.this,LoginSuccess.class));
+                        startActivity(new Intent(Login.this, HomePage.class));
                     }
 
                     @Override
@@ -111,13 +103,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, ForgotPassword.class));
                 break;
             case R.id.facebook:
-                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this, Arrays.asList("public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(Login.this, Arrays.asList("public_profile"));
                 break;
             case R.id.google:
                 signIn();
                 break;
             case R.id.login:
-                startActivity(new Intent(this,LoginSuccess.class));
+                startActivity(new Intent(this, HomePage.class));
                 break;
                 
         }
@@ -145,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void navigateToSecondActivity() {
         finish();
-        Intent intent = new Intent(MainActivity.this, LoginSuccess.class);
+        Intent intent = new Intent(Login.this, HomePage.class);
         startActivity(intent);
     }
 }

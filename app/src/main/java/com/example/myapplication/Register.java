@@ -50,7 +50,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.banner:
-                startActivity(new Intent(this,MainActivity.class));
+                startActivity(new Intent(this, Login.class));
                 break;
             case R.id.registerUser:
                         registerUser();

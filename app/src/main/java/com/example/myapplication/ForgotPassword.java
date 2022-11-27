@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -54,7 +53,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.banner:
-                startActivity(new Intent(this,MainActivity.class));
+                startActivity(new Intent(this, Login.class));
                 break;
             case R.id.resetPassword:
                 resetPassword();
