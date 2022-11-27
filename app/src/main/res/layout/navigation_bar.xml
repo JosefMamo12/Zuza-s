@@ -39,6 +39,7 @@
 
     <ImageView
         android:id="@+id/menuFoodImg"
+        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_restaurant_menu_24"
