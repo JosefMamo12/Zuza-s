@@ -1,45 +1,57 @@
 package com.example.myapplication;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class addMenuItem extends AppCompatActivity implements View.OnClickListener
 {
 
-    private TextView banner;
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase db;
     private EditText editName, editCategory;
-    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        System.out.println("Entered menu add page");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_menu_add_item);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance();
-        banner = (TextView) findViewById(R.id.banner);
+        TextView banner = (TextView) findViewById(R.id.add_item_header);
         banner.setOnClickListener(this);
 
-        editName = (EditText) findViewById(R.id.fullName);
-        editCategory =(EditText) findViewById(R.id.age);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        editName = (EditText) findViewById(R.id.add_item_name);
+        editCategory =(EditText) findViewById(R.id.add_item_category);
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.add_item_finish:
+                addItem();
+                break;
+            case R.id.add_item_abort:
+                finish();
+                break;
+        }
+    }
+
+    private void addItem()
     {
         String name = editName.getText().toString().trim();
         String category = editCategory.getText().toString().trim();
@@ -60,8 +72,12 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
         menuItem newItem = new menuItem(name, category);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems");
-        myRef.setValue(newItem);
 
+        myRef.setValue(newItem);
+        Toast t = new Toast(this);
+        t.setText("OK!");
+        t.show();
+        finish();
     }
 
 }

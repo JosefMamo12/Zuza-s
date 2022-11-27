@@ -1,10 +1,17 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
+
 public class menuItem
 {
     private String name;
 //    private Image img;
     private String category;
+
+    public menuItem()
+    {
+
+    }
 
     public menuItem(String name, /*Image img,*/ String category) {
         this.name = name;
@@ -34,5 +41,11 @@ public class menuItem
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @NonNull
+    public String toString()
+    {
+        return name + " from " + category;
     }
 }
