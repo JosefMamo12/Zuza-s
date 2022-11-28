@@ -30,6 +30,12 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
             case R.id.menuFoodImg:
                 startActivity(new Intent(this, MenuPage.class));
                 break;
+            case R.id.logInImg:
+                startActivity(new Intent(this, Login.class));
+                break;
+            case R.id.homeImg:
+                startActivity(new Intent(this,HomePage.class));
+                break;
 
         }
     }
