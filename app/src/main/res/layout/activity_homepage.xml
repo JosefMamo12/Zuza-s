@@ -11,7 +11,7 @@
         android:layout_height="120dp"
         android:src="@drawable/zuzalogo"
         android:background="@color/Black_Olive"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/todo" />
 
 
     <include layout="@layout/navigation_bar" />
