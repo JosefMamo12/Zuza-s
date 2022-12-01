@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 public class HomePage extends AppCompatActivity implements View.OnClickListener   {
 
-    ImageView login,menu,settings,foodMenu;
+
 
 
 
