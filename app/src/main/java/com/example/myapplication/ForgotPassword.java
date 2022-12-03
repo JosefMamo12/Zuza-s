@@ -20,9 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView banner;
     private EditText emailEditText;
-    private Button resetPasswordButton;
     private ProgressBar progressBar;
 
     FirebaseAuth auth;
@@ -35,10 +33,10 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
         emailEditText = (EditText) findViewById(R.id.email);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        banner = (TextView) findViewById(R.id.banner);
+        TextView banner = (TextView) findViewById(R.id.banner);
         banner.setOnClickListener(this);
 
-        resetPasswordButton = (Button) findViewById(R.id.resetPassword);
+        Button resetPasswordButton = (Button) findViewById(R.id.resetPassword);
         resetPasswordButton.setOnClickListener(this);
 
 
@@ -49,6 +47,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()){

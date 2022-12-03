@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -19,6 +20,8 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,7 +39,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.jar.Attributes;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,7 +70,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         callbackManager = CallbackManager.Factory.create();
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-
 
 
         firestore = FirebaseFirestore.getInstance();
@@ -109,22 +115,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    private void handleFacebookAccessToken(AccessToken accessToken) {
-        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    String email = user.getEmail();
-                    System.out.println(email);
-                }else{
-                    Toast.makeText(Login.this, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -137,7 +127,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 startActivity(new Intent(this, ForgotPassword.class));
                 break;
             case R.id.facebook:
-                LoginManager.getInstance().logInWithReadPermissions(Login.this, Arrays.asList("public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(Login.this, Arrays.asList("public_profile", "email"));
                 break;
             case R.id.google:
                 signIn();
@@ -180,18 +170,37 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         mAuth.signInWithEmailAndPassword(mail, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        startActivity(new Intent(this, HomePage.class));
                         Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        startActivity(new Intent(this, HomePage.class));
+
 
 
                     } else {
                         Toast.makeText(Login.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                 });
 
 
+    }
+
+    private void handleFacebookAccessToken(AccessToken accessToken) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(Login.this, "Authentication Succeed.",
+                            Toast.LENGTH_SHORT).show();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                } else {
+                    Toast.makeText(Login.this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -213,6 +222,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void fireBaseAuthWithGoogle(String idToken) {
+        progressBar.setVisibility(View.VISIBLE);
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -220,8 +230,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     Toast.makeText(Login.this, "Auth with google succeed", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });

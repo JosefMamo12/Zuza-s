@@ -6,15 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".HomePage">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:src="@drawable/zuzalogo"
-        android:background="@color/Black_Olive"
-        android:contentDescription="@string/todo" />
 
 
-    <include layout="@layout/navigation_bar" />
+        <ImageView
+            android:id="@+id/zuzaHomePageLogo"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@color/Black_Olive"
+            android:contentDescription="@string/todo"
+            android:src="@drawable/zuzalogo"/>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/zuzaHomePageLogo"
+                >
+
+                <com.denzcoskun.imageslider.ImageSlider
+                    android:id="@+id/image_slider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="250dp"
+                    app:iss_auto_cycle="true"
+                    app:iss_delay="0"
+                    app:iss_period="3000" />
+            </LinearLayout>
+
+
+        <include layout="@layout/navigation_bar" />
 
 </RelativeLayout>
 
