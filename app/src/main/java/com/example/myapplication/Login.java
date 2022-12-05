@@ -62,6 +62,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     CallbackManager callbackManager;
     GoogleSignInOptions googleSignInOptions;
     GoogleSignInClient googleSignInClient;
+    LoginManager loginManager;
 
 
     @SuppressLint("MissingInflatedId")
@@ -75,6 +76,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         callbackManager = CallbackManager.Factory.create();
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+        loginManager = LoginManager.getInstance();
 
 
         firestore = FirebaseFirestore.getInstance();
@@ -102,24 +104,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        handleFacebookAccessToken(loginResult.getAccessToken());
-                        startActivity(new Intent(Login.this, HomePage.class));
-                    }
 
-                    @Override
-                    public void onCancel() {
-                        // App code
-                    }
-
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                    }
-                });
 
     }
 
@@ -135,7 +120,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 startActivity(new Intent(this, ForgotPassword.class));
                 break;
             case R.id.facebook:
-                LoginManager.getInstance().logInWithReadPermissions(Login.this, Arrays.asList("public_profile", "email"));
+                facebookSignIn();
                 break;
             case R.id.google:
                 signIn();
@@ -150,6 +135,28 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+    private void facebookSignIn() {
+        loginManager.logInWithReadPermissions(Login.this, Arrays.asList("public_profile", "email"));
+        loginManager.registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                        navigateToSecondActivity();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Toast.makeText(Login.this, "" + exception.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void twitterSignIn() {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
         provider.addCustomParameter("lang", "he");
@@ -161,20 +168,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
-                                    // User is signed in.
-                                    // IdP data available in
-                                    // authResult.getAdditionalUserInfo().getProfile().
-                                    // The OAuth access token can also be retrieved:
-                                    // ((OAuthCredential)authResult.getCredential()).getAccessToken().
-                                    // The OAuth secret can be retrieved by calling:
-                                    // ((OAuthCredential)authResult.getCredential()).getSecret().
+                                    navigateToSecondActivity();
+                                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
                                 }
                             })
                     .addOnFailureListener(
                             new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    // Handle failure.
+                                    Toast.makeText(Login.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
                                 }
                             });
         } else {
@@ -184,20 +186,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
-                                    // User is signed in.
-                                    // IdP data available in
-                                    authResult.getAdditionalUserInfo().getProfile();
-                                    // The OAuth access token can also be retrieved:
-//
-                                    // The OAuth secret can be retrieved by calling:
-                                    // ((OAuthCredential)authResult.getCredential()).getSecret().
+                                    navigateToSecondActivity();
+                                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
+
                                 }
                             })
                     .addOnFailureListener(
                             new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    // Handle failure.
+                                    Toast.makeText(Login.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
                                 }
                             });
         }
@@ -291,10 +289,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
-                    Toast.makeText(Login.this, "Auth with google succeed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 }
             }

@@ -30,6 +30,9 @@
     <string name="add_item_finish">הוספה \ Add</string>
     <string name="add_item_abort">Never mind \ לא משנה</string>
     <string name="todo">TODO</string>
+    <string name="menu">Menu</string>
+    <string name="home">Home</string>
+    <string name="food">Food</string>
 
 
 </resources>
