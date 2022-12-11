@@ -18,7 +18,7 @@
     <string name="facebook_client_token">48ec3cf223794ce4c9677cef67bca291</string>
 
      <!-- (From Main Page) Menu page -->
-    <string name="add_item_menu">Add \ הוספת פריט</string>
+    <string name="add_item_menu">הוספת פריט</string>
     <string name="get_items_menu">Show</string>
     <string name="items_list">Items</string>
 
@@ -26,9 +26,11 @@
     <!-- (From Menu Page) Add item page (Manager page) -->
     <string name="add_item_header">הוספת פריט</string>
     <string name="add_item_name">שם</string>
+    <string name="add_item_description">תיאור קצר (לא חייב למלא)</string>
+    <string name="add_item_new_category">הוספת קטגוריה חדשה</string>
     <string name="add_item_category">קטגוריה</string>
     <string name="add_item_price">מחיר</string>
-    <string name="add_item_finish">הוספה</string>
+    <string name="add_item_finish">הוספת פריט</string>
     <string name="add_item_abort">לא משנה</string>
 
 

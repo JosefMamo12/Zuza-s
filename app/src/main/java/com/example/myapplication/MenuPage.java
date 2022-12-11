@@ -34,14 +34,25 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener
                 startActivity(new Intent(this, addMenuItem.class));
                 break;
             case R.id.get_items_menu:
-                showItems();
+                showAll();
                 break;
 
         }
+    }
+
+    private void getChildrenOf(DataSnapshot category)
+    {
+        System.out.println("-----Items start-----");
+        for (DataSnapshot child : category.getChildren())
+        {
+            System.out.println("{"+child+"}");
+            getChildrenOf(child);
+        }
+        System.out.println("-----Items end-----");
 
     }
 
-    private void showItems()
+    private void showAll()
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems");
@@ -50,9 +61,13 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
-                menuItem item = snapshot.getValue(menuItem.class);
-                assert item != null;
-                System.out.println(item);
+                for (DataSnapshot child : snapshot.getChildren())
+                {
+                    System.out.println("---Category start---");
+                    System.out.println("{"+child+"}");
+//                    getChildrenOf(child);
+                    System.out.println("---Category end---");
+                }
             }
 
             @Override

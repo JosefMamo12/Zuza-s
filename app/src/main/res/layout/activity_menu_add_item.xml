@@ -11,24 +11,25 @@
         android:id="@+id/add_item_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_item_header"
-        android:textSize="60sp"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="50dp"
-        tools:ignore="MissingConstraints"
-        />
+        android:fontFamily="sans-serif-black"
+        android:text="@string/add_item_header"
+        android:textAlignment="center"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <!-- Name of item to be added. (Must not be empty) -->
     <EditText
         android:id="@+id/add_item_name"
-        android:layout_marginTop="60dp"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/add_item_name"
         android:inputType="text"
@@ -38,29 +39,56 @@
         app:layout_constraintTop_toBottomOf="@id/add_item_header"
         tools:ignore="MissingConstraints" />
 
+    <!-- Short description of item to be added. (Could be empty) -->
+
     <!-- Category of item to be added. (Must not be empty) -->
+
     <EditText
+        android:id="@+id/add_item_description"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/add_item_description"
+        android:inputType="text"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_item_name"
+        tools:ignore="MissingConstraints" />
+
+    <!-- Price of item to be added. (Must not be empty) -->
+
+    <AutoCompleteTextView
         android:id="@+id/add_item_category"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/add_item_category"
         android:inputType="text"
         android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_item_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_item_description"
         tools:ignore="MissingConstraints" />
-
-    <!-- Price of item to be added. (Must not be empty) -->
 
     <EditText
         android:id="@+id/add_item_price"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="@string/add_item_price"
         android:inputType="text"
@@ -79,38 +107,50 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <!-- Finish task (Add item to menu) -->
+
+    <!-- Finish task (abort, don't add item to menu) -->
+
     <Button
-        android:onClick="onClick"
         android:id="@+id/add_item_finish"
-        android:layout_width="203dp"
-        android:layout_height="121dp"
+        android:layout_width="212dp"
+        android:layout_height="106dp"
+        android:layout_marginTop="32dp"
+        android:onClick="onClick"
         android:text="@string/add_item_finish"
         android:textSize="26sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_item_category" />
+        app:layout_constraintTop_toBottomOf="@+id/add_item_price" />
 
-    <!-- Finish task (abort, don't add item to menu) -->
     <Button
-        android:onClick="onClick"
         android:id="@+id/add_item_abort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="onClick"
         android:text="@string/add_item_abort"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/add_item_price"
         app:layout_constraintTop_toBottomOf="@+id/add_item_finish" />
 
+    <Button
+        android:id="@+id/add_item_new_category"
+        android:layout_width="230dp"
+        android:layout_height="53dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="onClick"
+        android:text="@string/add_item_new_category"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/add_item_price"
+        app:layout_constraintTop_toBottomOf="@+id/add_item_finish" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

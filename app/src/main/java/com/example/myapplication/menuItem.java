@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 public class menuItem
 {
     private String name;
+    private String description;
 //    private Image img;
     private String category;
     private double price;
@@ -14,12 +15,11 @@ public class menuItem
 
     }
 
-
-
-    public menuItem(String name, /*Image img,*/ String category, double price) {
+    public menuItem(String name, String description, /*Image img,*/ String category, double price) {
         setCategory(category);
         setName(name);
         setPrice(price);
+        setDescription(description);
     }
 
     public String getName() {
@@ -59,13 +59,22 @@ public class menuItem
         this.price = price;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @NonNull
     public String toString()
     {
         return "menuItem{" +
                 "name=" + getName() +
+                ", description=" + getDescription() +
                 ", category=" + getCategory() +
                 ", price=" + getPrice() +
-                '}';
+                '}'+"\n";
     }
 }
