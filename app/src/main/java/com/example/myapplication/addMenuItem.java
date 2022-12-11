@@ -32,6 +32,7 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
 {
     private EditText editName, editDescription, editPrice;
     private AutoCompleteTextView editCategory;
+    private ArrayList<String> currentCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,7 +60,7 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
              */
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems");
-        ArrayList<String> currentCategories = new ArrayList<>();
+        currentCategories = new ArrayList<>();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
@@ -108,7 +109,7 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
         Context temp_context = this;
         new AlertDialog.Builder(this).setTitle("")
                 .setMessage("שם הקטגוריה").setView(newCategory)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("יאללה זורם", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String category = newCategory.getText().toString().trim();
                             // Add category
@@ -120,10 +121,9 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
                             Toast t = new Toast(temp_context);
                             t.setText("הוספת קטגוריה הושלמה.");
                             t.show();
-
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                     }
                 }).show();
@@ -136,7 +136,7 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
         String category = editCategory.getText().toString().trim();
         String price = editPrice.getText().toString().trim();
 
-        if (invalidInput(name, description, category, price))
+        if (invalidInput(name, category, price))
             return;
 
         // Define new item object and add into database under menuItems under categories
@@ -158,37 +158,37 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
      * @param price product price
      * @return false if only all the given inputs are valid and can be used to create a new item.
      */
-    private boolean invalidInput(String name, String description, String category, String price)
+    private boolean invalidInput(String name, String category, String price)
     {
-        if (name.isEmpty())
-        {
-            editName.setError("Name required.");
-            editName.requestFocus();
-            return true;
+        try {
+            if (name.isEmpty()) {
+                editName.setError("אנא בחרי שם.");
+                editName.requestFocus();
+                return true;
+            }
+            if (category.isEmpty()) {
+                editCategory.setError("אנא בחרי קטגוריה.");
+                editCategory.requestFocus();
+                return true;
+            }
+            if (!currentCategories.contains(category)) {
+                editCategory.setError("אנא בחרי קטגוריה קיימת.");
+                editCategory.requestFocus();
+                return true;
+            }
+            if (price.isEmpty()) {
+                editPrice.setError("אנא בחרי מחיר.");
+                editPrice.requestFocus();
+                return true;
+            } else if (Double.parseDouble(price) < 0) {
+                editPrice.setError("אנא בחרי מחיר לא שלילי.");
+                editPrice.requestFocus();
+                return true;
+            }
         }
-        if (description.isEmpty())
+        catch (Exception ignored)
         {
-            editDescription.setError("Description required.");
-            editDescription.requestFocus();
-            return true;
-        }
-        if (category.isEmpty())
-        {
-            editCategory.setError("Category required.");
-            editCategory.requestFocus();
-            return true;
-        }
-        if (price.isEmpty())
-        {
-            editPrice.setError("Price required.");
-            editPrice.requestFocus();
-            return true;
-        }
-        else if (Double.parseDouble(price) < 0)
-        {
-            editPrice.setError("Please input a non-negative price.");
-            editPrice.requestFocus();
-            return true;
+
         }
         return false;
     }
