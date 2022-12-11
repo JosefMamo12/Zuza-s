@@ -24,11 +24,12 @@
 
 
     <!-- (From Menu Page) Add item page (Manager page) -->
-    <string name="add_item_header">הוספת פריט \ New item</string>
-    <string name="add_item_name">שם \ Name</string>
-    <string name="add_item_category">קטגוריה \ Category</string>
-    <string name="add_item_finish">הוספה \ Add</string>
-    <string name="add_item_abort">Never mind \ לא משנה</string>
+    <string name="add_item_header">הוספת פריט</string>
+    <string name="add_item_name">שם</string>
+    <string name="add_item_category">קטגוריה</string>
+    <string name="add_item_price">מחיר</string>
+    <string name="add_item_finish">הוספה</string>
+    <string name="add_item_abort">לא משנה</string>
 
 
 </resources>
