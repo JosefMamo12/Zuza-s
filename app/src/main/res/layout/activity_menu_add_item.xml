@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Register">
 
+    <!-- Headline, describes current screen -->
     <TextView
         android:id="@+id/add_item_header"
         android:layout_width="match_parent"
@@ -22,6 +23,7 @@
         tools:ignore="MissingConstraints"
         />
 
+    <!-- Name of item to be added. (Must not be empty) -->
     <EditText
         android:id="@+id/add_item_name"
         android:layout_marginTop="60dp"
@@ -34,9 +36,9 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_item_header"
-
         tools:ignore="MissingConstraints" />
 
+    <!-- Category of item to be added. (Must not be empty) -->
     <EditText
         android:id="@+id/add_item_category"
         android:layout_width="380dp"
@@ -49,6 +51,25 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_item_name"
+        tools:ignore="MissingConstraints" />
+
+    <!-- Price of item to be added. (Must not be empty) -->
+
+    <EditText
+        android:id="@+id/add_item_price"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:hint="@string/add_item_price"
+        android:inputType="text"
+        android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_item_category"
         tools:ignore="MissingConstraints" />
 
     <ProgressBar
@@ -64,6 +85,7 @@
         app:layout_constraintRight_toRightOf="parent"
         tools:ignore="MissingConstraints" />
 
+    <!-- Finish task (Add item to menu) -->
     <Button
         android:onClick="onClick"
         android:id="@+id/add_item_finish"
@@ -77,6 +99,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_item_category" />
 
+    <!-- Finish task (abort, don't add item to menu) -->
     <Button
         android:onClick="onClick"
         android:id="@+id/add_item_abort"

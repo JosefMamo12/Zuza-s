@@ -7,23 +7,28 @@ public class menuItem
     private String name;
 //    private Image img;
     private String category;
+    private double price;
 
     public menuItem()
     {
 
     }
 
-    public menuItem(String name, /*Image img,*/ String category) {
-        this.name = name;
-//        this.img = img;
-        this.category = category;
+
+
+    public menuItem(String name, /*Image img,*/ String category, double price) {
+        setCategory(category);
+        setName(name);
+        setPrice(price);
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
+        assert (!name.isEmpty());
         this.name = name;
     }
 
@@ -39,13 +44,28 @@ public class menuItem
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(String category)
+    {
+        assert(!category.isEmpty());
         this.category = category;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        assert (price >= 0);
+        this.price = price;
     }
 
     @NonNull
     public String toString()
     {
-        return name + " from " + category;
+        return "menuItem{" +
+                "name=" + getName() +
+                ", category=" + getCategory() +
+                ", price=" + getPrice() +
+                '}';
     }
 }
