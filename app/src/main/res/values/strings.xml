@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Zuza\'s</string>
+
+    <!-- Registration/login pages -->
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
@@ -16,7 +18,9 @@
     <string name="facebook_app_id">3018310431648249</string>
     <string name="fb_login_protocol_scheme">fb3018310431648249</string>
     <string name="facebook_client_token">48ec3cf223794ce4c9677cef67bca291</string>
-
+    <!--Main Page -->
+    <string name="Location">איך מגיעים אלינו?</string>
+    <string name="Description">מאפים טריים, קינוחי וטרינה, כריכים, קישים, עוגות ועוגיות </string>
      <!-- (From Main Page) Menu page -->
     <string name="add_item_menu">הוספת פריט</string>
     <string name="get_items_menu">Show</string>

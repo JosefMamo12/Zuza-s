@@ -6,15 +6,56 @@
     android:layout_height="match_parent"
     tools:context=".HomePage">
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <ImageView
+                android:id="@+id/on_location_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/zuza_place"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="20dp"
+                />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Description"
+                android:padding="20dp" />
+
+            <Button
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Location"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:src="@drawable/zuzalogo"
         android:background="@color/Black_Olive"
-        android:contentDescription="TODO" />
-
+        android:contentDescription="TODO"
+        android:src="@drawable/zuzalogo" />
 
     <include layout="@layout/navigation_bar" />
+
 
 </RelativeLayout>
 

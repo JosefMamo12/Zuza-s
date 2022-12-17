@@ -39,3 +39,4 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         super.onPointerCaptureChanged(hasCapture);
     }
 }
+//32.71438650765835, 35.56366019755522
