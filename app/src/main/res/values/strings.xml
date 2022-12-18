@@ -21,13 +21,15 @@
     <!--Main Page -->
     <string name="Location">איך מגיעים אלינו?</string>
     <string name="Description">מאפים טריים, קינוחי וטרינה, כריכים, קישים, עוגות ועוגיות </string>
-     <!-- (From Main Page) Menu page -->
+    <!-- (From Main Page) Menu page -->
     <string name="add_item_menu">הוספת פריט</string>
     <string name="get_items_menu">Show</string>
     <string name="items_list">Items</string>
 
 
     <!-- (From Menu Page) Add item page (Manager page) -->
+    <string name="menu_header">תפריט</string>
+
     <string name="add_item_header">הוספת פריט</string>
     <string name="add_item_name">שם</string>
     <string name="add_item_description">תיאור קצר (לא חייב למלא)</string>
@@ -36,6 +38,7 @@
     <string name="add_item_price">מחיר</string>
     <string name="add_item_finish">הוספת פריט</string>
     <string name="add_item_abort">לא משנה</string>
+    <string name="menu_search">חיפוש</string>
 
 
 </resources>

@@ -1,18 +1,13 @@
 package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class addMenuItem extends AppCompatActivity implements View.OnClickListener
+public class MenuItemAddition extends AppCompatActivity implements View.OnClickListener
 {
     private EditText editName, editDescription, editPrice;
     private AutoCompleteTextView editCategory;
@@ -132,7 +126,7 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
     private void addItem()
     {
         String name = editName.getText().toString().trim();
-        String description = editDescription.toString().trim();
+        String description = editDescription.getText().toString().trim();
         String category = editCategory.getText().toString().trim();
         String price = editPrice.getText().toString().trim();
 
@@ -140,11 +134,12 @@ public class addMenuItem extends AppCompatActivity implements View.OnClickListen
             return;
 
         // Define new item object and add into database under menuItems under categories
-        menuItem newItem = new menuItem(name, description, category, Double.parseDouble(price));
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems").child(category).child(name);
 
-        myRef.setValue(newItem);
+        MenuItemModel itemAdapter = new MenuItemModel(name, description, price);
+
+        myRef.setValue(itemAdapter);
         Toast t = new Toast(this);
         t.setText("הוספת פריט הושלמה.");
         t.show();
