@@ -151,7 +151,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onError(FacebookException exception) {
+                    public void onError(@NonNull FacebookException exception) {
                         Toast.makeText(Login.this, "" + exception.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -289,12 +289,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
-                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                } else {
-                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
                 }
+                Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
 

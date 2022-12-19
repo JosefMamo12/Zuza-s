@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -16,6 +17,11 @@ import android.widget.TextView;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
@@ -23,7 +29,7 @@ import java.util.ArrayList;
 public class HomePage extends AppCompatActivity implements View.OnClickListener{
 
     private ImageSlider imageSlider;
-    private ImageView loginImg;
+    private FirebaseDatabase db;
 
 
     @Override
@@ -31,17 +37,9 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-        loginImg = (ImageView) findViewById(R.id.logInImg);
-        loginImg.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    findViewById(R.id.loginText).setVisibility(View.VISIBLE);
-                    return true;
-                }
-                return true;
-            }
-        });
+        db = FirebaseDatabase.getInstance();
+        DatabaseReference pictureReference = db.getReference("HomePageSliderPhotos");
+        databaseReference.ge
 
         imageSlider = (ImageSlider) findViewById(R.id.image_slider);
 
@@ -73,8 +71,5 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener{
 
         }
     }
-
-
-
 }
 
