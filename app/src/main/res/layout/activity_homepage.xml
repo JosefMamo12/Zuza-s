@@ -18,13 +18,15 @@
             android:orientation="vertical">
 
 
-            <ImageView
-                android:id="@+id/on_location_pic"
+            <com.denzcoskun.imageslider.ImageSlider
+                android:layout_marginTop="120dp"
+                android:id="@+id/image_slider"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/zuza_place" />
+                android:layout_height="300dp"
+                app:iss_auto_cycle="true"
+                app:iss_delay="0"
+                app:iss_period="3000" />
+
 
             <TextView
                 android:id="@+id/description"
@@ -35,16 +37,16 @@
 
             <Button
                 android:id="@+id/location"
-                android:backgroundTint="@color/Chestnut"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/Chestnut"
                 android:clickable="true"
-                android:text="@string/Location"
                 android:focusable="true"
                 android:onClick="openLocation"
+                android:text="@string/Location"
+                android:textColor="@color/white"
                 tools:ignore="UsingOnClickInXml" /><!-- doesn't work without onClick xml-->
 
 

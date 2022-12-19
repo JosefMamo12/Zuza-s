@@ -13,7 +13,7 @@
         android:id="@+id/logInImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_login_36"
+        android:src="@drawable/ic_baseline_login_24"
         android:layout_gravity="center"
         android:padding="20dp"
         tools:ignore="ContentDescription" />

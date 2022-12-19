@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -20,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
-    private TextView banner,registerUser;
     private FirebaseAuth mAuth;
     private EditText editTextFullName, editTextAge,editTextEmail,editTextPassword;
     private ProgressBar progressBar;
@@ -31,10 +31,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         mAuth = FirebaseAuth.getInstance();
 
-        banner = (TextView) findViewById(R.id.banner);
+        TextView banner = (TextView) findViewById(R.id.banner);
         banner.setOnClickListener(this);
 
-        registerUser = (Button) findViewById(R.id.registerUser);
+        TextView registerUser = (Button) findViewById(R.id.registerUser);
         registerUser.setOnClickListener(this);
 
         editTextFullName = (EditText) findViewById(R.id.fullName);
@@ -46,6 +46,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
      }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -102,7 +103,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             User user = new User(fullName, age, email);
-
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(task1 -> {
