@@ -25,7 +25,7 @@ import java.util.Iterator;
 
 public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
     private ImageView logInImg, logOutImg, accountImg, homePageImg;
-    private Button addItemBtn;
+    private Button addItemBtn, editItemBtn;
     boolean isAdmin;
     ArrayList<MenuItemModel> items = new ArrayList<>();
     MenuItemAdapter menuItemAdapter;
@@ -41,20 +41,19 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         database = FirebaseDatabase.getInstance();
         addItemBtn = (Button) findViewById(R.id.menu_add_item_manager);
+        editItemBtn = (Button) findViewById(R.id.menu_edit_item_manager);
         navBarInitializer();
 
 
+        // Read categories models from database.
         ArrayList<MenuCategoryModel> categories = new ArrayList<>();
-
         DatabaseReference myRef = database.getReference("menuItems");
-
-
-
-
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot child : snapshot.getChildren()) {
+                for (DataSnapshot child : snapshot.getChildren())
+                {
+                    // Give the default zuza logo as icon, could be changed later.
                     categories.add(new MenuCategoryModel(R.drawable.z_logo, child.getKey()));
                 }
             }
@@ -66,10 +65,14 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         });
 
         recyclerViewCategories = findViewById(R.id.rv_1);
-        MenuCategoryAdapter menuCategoryAdapter = new MenuCategoryAdapter(categories, this, this); // might be wrong
+
+        // {this} is given twice as argument, as this class both is an activity and also
+        // implements the interface updateMenuRecyclerView.
+        MenuCategoryAdapter menuCategoryAdapter = new MenuCategoryAdapter(categories, this, this);
         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCategories.setAdapter(menuCategoryAdapter);
 
+        // Initialize items and bind them to a recycle view.
         items = new ArrayList<>();
         recyclerViewItems = findViewById(R.id.rv_2);
         menuItemAdapter = new MenuItemAdapter(items);
@@ -80,10 +83,11 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     private void checkIfAdminConnected() {
         DatabaseReference userRef = database.getReference("Users");
 
-        if (mAuth.getCurrentUser() == null) {
+        if (mAuth.getCurrentUser() == null)
+        {
             addItemBtn.setVisibility(View.INVISIBLE);
+            editItemBtn.setVisibility(View.INVISIBLE);
             return;
-
         }
         String uid = mAuth.getCurrentUser().getUid();
         userRef.addValueEventListener(new ValueEventListener() {
@@ -96,10 +100,11 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                     }
                     if (user.getUid().equals(uid) && user.isAdmin()) {
                         addItemBtn.setVisibility(View.VISIBLE);
+                        editItemBtn.setVisibility(View.VISIBLE);
                         break;
                     }
                     addItemBtn.setVisibility(View.INVISIBLE);
-
+                    editItemBtn.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -148,11 +153,10 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             case R.id.menu_add_item_manager:
                 startActivity(new Intent(this, MenuItemAddition.class));
                 break;
-            case R.id.get_items_menu:
-                showAll();
+            case R.id.menu_edit_item_manager:
+                startActivity(new Intent(this, MenuItemEdit.class));
                 break;
             case R.id.homeImg:
-                System.out.println("home page from menu pressed");
                 finish();
                 break;
             case R.id.logInImg:
@@ -174,7 +178,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     }
 
     /**
-     * For debuging purposes.
+     * For debugging purposes.
      */
     private void showAll() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

@@ -18,12 +18,14 @@
     <string name="facebook_app_id">3018310431648249</string>
     <string name="fb_login_protocol_scheme">fb3018310431648249</string>
     <string name="facebook_client_token">48ec3cf223794ce4c9677cef67bca291</string>
+
     <!--Main Page -->
     <string name="Location">איך מגיעים אלינו?</string>
     <string name="Description">מאפים טריים, קינוחי וטרינה, כריכים, קישים, עוגות ועוגיות </string>
+
     <!-- (From Main Page) Menu page -->
     <string name="add_item_menu">הוספת פריט</string>
-    <string name="get_items_menu">Show</string>
+    <string name="get_items_menu">PRINT ITEMS</string>
     <string name="items_list">Items</string>
 
 
@@ -40,5 +42,12 @@
     <string name="add_item_abort">לא משנה</string>
     <string name="menu_search">חיפוש</string>
 
+    <!-- (From Menu Page) Edit item page (Manager page) -->
+    <string name="edit_item_header">עריכת פריט</string>
+    <string name="edit_item_name">שם הפריט לעריכה</string>
+    <string name="edit_item_abort">לא משנה</string>
+    <string name="edit_item_category">עריכת קטגוריה קיימת</string>
+    <string name="edit_item_finish">סיום עריכת פריט</string>
+    <string name="edit_item_menu">עריכת פריט</string>
 
 </resources>

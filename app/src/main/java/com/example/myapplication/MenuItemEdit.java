@@ -1,10 +1,10 @@
 package com.example.myapplication;
+
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -18,50 +18,56 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MenuItemAddition extends AppCompatActivity implements View.OnClickListener
+public class MenuItemEdit extends AppCompatActivity implements View.OnClickListener
 {
-    private EditText editName, editDescription, editPrice;
-    private AutoCompleteTextView editCategory;
-    private ArrayList<String> currentCategories;
+    private EditText editCategory, editDescription, editPrice;
+    private AutoCompleteTextView editName;
+    private HashMap<String, String> itemToCategory;
+
+    private HashMap<String, MenuItemModel> allItemsModels;
+    private ArrayList<String> allItems;
+
+    private MenuItemModel selectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_add_item);
+        setContentView(R.layout.activity_menu_edit_item);
 
-        TextView banner = (TextView) findViewById(R.id.add_item_header);
+        TextView banner = (TextView) findViewById(R.id.edit_item_header);
         banner.setOnClickListener(this);
 
-        editName = (EditText) findViewById(R.id.add_item_name);
-        editDescription = (EditText) findViewById(R.id.add_item_description);
-
-        /* Make category autocomplete based on existing categories*/
-
-        // Get a reference to the AutoCompleteTextView in the layout
-            editCategory = (AutoCompleteTextView) findViewById(R.id.add_item_category);
-
+        editName = (AutoCompleteTextView) findViewById(R.id.edit_item_name);
+        editDescription = (EditText) findViewById(R.id.edit_item_description);
+        editCategory = (EditText) findViewById(R.id.edit_item_category);
+        editPrice = (EditText)  findViewById(R.id.edit_item_price);
 
             /*
-            Pull from database categories into an arraylist.
+            Pull from database items into an arraylist.
             (Unless this is done here, and not a separate function, the array list will be empty
             even though there are categories).
              */
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems");
-        currentCategories = new ArrayList<>();
+        ArrayList<String> currentItems = new ArrayList<>();
+        allItems = new ArrayList<>();
+        allItemsModels = new HashMap<>();
+        itemToCategory = new HashMap<>();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
-                for (DataSnapshot child : snapshot.getChildren())
+                for (DataSnapshot category : snapshot.getChildren())
                 {
-                    String category = child.getKey();
-                    currentCategories.add(category);
+                    addItems(category);
                 }
             }
 
@@ -72,10 +78,47 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         });
 
         // Create the adapter and set it to the AutoCompleteTextView
-            ArrayAdapter<String> adapter =
-                    new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, currentCategories);
-        editCategory.setAdapter(adapter);
-        editPrice = (EditText)  findViewById(R.id.add_item_price);
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, allItems);
+        editName.setAdapter(adapter);
+
+        // Based on item clicked, autofill rest of info to ease on the manager.
+        editName.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
+            {
+                String itemName = adapter.getItem(i);
+                String itemCategory = itemToCategory.get(itemName);
+                selectedItem = getItem(itemName);
+
+                editCategory.setText(itemCategory);
+                editDescription.setText(selectedItem.getDesc());
+                editPrice.setText(selectedItem.getPrice());
+            }
+        });
+}
+
+    private MenuItemModel getItem(String itemName)
+    {
+        return allItemsModels.get(itemName);
+    }
+
+    private void addItems(DataSnapshot category)
+    {
+        for (DataSnapshot item : category.getChildren())
+        {
+            Map<String,String> td=(HashMap<String, String>)item.getValue();
+            assert td != null;
+            String price = td.get("price");
+            String name = td.get("name");
+            String desc = td.get("desc");
+            MenuItemModel singleItem = new MenuItemModel(name, desc, price);
+
+            allItemsModels.put(name, singleItem);
+            allItems.add(name);
+            itemToCategory.put(name, category.getKey());
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -84,45 +127,21 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
     {
         switch (view.getId())
         {
-            case R.id.add_item_finish:
-                addItem();
+            case R.id.edit_item_finish:
+                updateItem();
                 break;
-            case R.id.add_item_abort:
+            case R.id.edit_item_abort:
                 finish();
-                break;
-            case R.id.add_item_new_category:
-                addCategory();
                 break;
         }
     }
 
-    private void addCategory()
-    {
-        final EditText newCategory = new EditText(this);
-        Context temp_context = this;
-        new AlertDialog.Builder(this).setTitle("")
-                .setMessage("שם הקטגוריה").setView(newCategory)
-                .setPositiveButton("יאללה זורם", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String category = newCategory.getText().toString().trim();
-                            // Add category
-                            // Define new item object and add into database under menuItems.
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference myRef = database.getReference("menuItems").child(category);
-
-                            myRef.setValue(category);
-                            Toast t = new Toast(temp_context);
-                            t.setText("הוספת קטגוריה הושלמה.");
-                            t.show();
-                    }
-                })
-                .setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
-                }).show();
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 
-    private void addItem()
+    private void updateItem()
     {
         String name = editName.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
@@ -138,11 +157,24 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
 
         MenuItemModel itemAdapter = new MenuItemModel(name, description, price);
 
+        if (!name.equals(selectedItem.getName()))
+        {
+            removeItem(selectedItem.getName());
+        }
+
         myRef.setValue(itemAdapter);
         Toast t = new Toast(this);
-        t.setText("הוספת פריט הושלמה.");
+        t.setText("עריכת פריט הושלמה.");
         t.show();
         finish();
+    }
+
+    private void removeItem(String item)
+    {
+        String category = itemToCategory.get(item);
+        assert category != null;
+        FirebaseDatabase.getInstance().getReference("menuItems")
+                .child(category).child(selectedItem.getName()).removeValue();
     }
 
     /**
@@ -165,7 +197,7 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
                 editCategory.requestFocus();
                 return true;
             }
-            if (!currentCategories.contains(category)) {
+            if (!itemToCategory.containsValue(category)) {
                 editCategory.setError("אנא בחרי קטגוריה קיימת.");
                 editCategory.requestFocus();
                 return true;
@@ -186,5 +218,4 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         }
         return false;
     }
-
 }
