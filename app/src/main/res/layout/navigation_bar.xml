@@ -3,57 +3,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="#F2F3F5"
     android:layout_alignParentBottom="true"
+    android:background="#F2F3F5"
     android:gravity="center"
     tools:ignore="MissingConstraints"
     tools:showIn="@layout/activity_homepage">
 
-    <ImageView
-        android:id="@+id/logInImg"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_login_24"
-        android:layout_gravity="center"
-        android:padding="20dp"
-        tools:ignore="ContentDescription" />
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/accountImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:src="@drawable/ic_baseline_account_circle_36"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/logInImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:src="@drawable/ic_baseline_login_24"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/menuImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_menu_24"
         android:layout_gravity="center"
         android:padding="20dp"
+        android:src="@drawable/ic_baseline_menu_24"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/homeImg"
-        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_home_24"
         android:layout_gravity="center"
         android:padding="20dp"
+        android:src="@drawable/ic_baseline_home_24"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/menuFoodImg"
-        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_restaurant_menu_24"
         android:layout_gravity="center"
         android:padding="20dp"
+        android:src="@drawable/ic_baseline_restaurant_menu_24"
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/settingImg"
+        android:id="@+id/logOutImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_settings_36"
         android:layout_gravity="center"
         android:padding="20dp"
+        android:src="@drawable/ic_baseline_logout_36"
         tools:ignore="ContentDescription" />
+
+
 </LinearLayout>
