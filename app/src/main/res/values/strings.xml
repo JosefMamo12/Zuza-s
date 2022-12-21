@@ -46,8 +46,10 @@
     <string name="edit_item_header">עריכת פריט</string>
     <string name="edit_item_name">שם הפריט לעריכה</string>
     <string name="edit_item_abort">לא משנה</string>
-    <string name="edit_item_category">עריכת קטגוריה קיימת</string>
+    <string name="edit_item_category">עריכת קטגוריה</string>
+    <string name="edit_item_remove_category">הסרת קטגוריה</string>
     <string name="edit_item_finish">סיום עריכת פריט</string>
     <string name="edit_item_menu">עריכת פריט</string>
+    <string name="edit_item_remove">הסרת פריט נבחר</string>
 
 </resources>

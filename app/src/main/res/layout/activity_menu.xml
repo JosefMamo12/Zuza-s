@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MenuPage">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -82,9 +83,11 @@
         android:id="@+id/menu_add_item_manager"
         android:layout_width="166dp"
         android:layout_height="66dp"
+        android:layout_marginEnd="24dp"
         android:onClick="onClick"
         android:text="@string/add_item_menu"
         app:layout_constraintBottom_toTopOf="@+id/include"
+        app:layout_constraintEnd_toStartOf="@+id/menu_edit_item_manager"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="UsingOnClickInXml" />
 
@@ -92,6 +95,7 @@
         android:id="@+id/menu_edit_item_manager"
         android:layout_width="166dp"
         android:layout_height="66dp"
+        android:layout_marginEnd="12dp"
         android:onClick="onClick"
         android:text="@string/edit_item_menu"
         app:layout_constraintBottom_toTopOf="@+id/include"

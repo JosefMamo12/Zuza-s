@@ -7,6 +7,22 @@
     tools:context=".MenuItemEdit">
 
     <!-- Headline, describes current screen -->
+
+    <Button
+        android:id="@+id/edit_item_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:onClick="onClick"
+        android:text="@string/edit_item_remove"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edit_item_finish"
+        app:layout_constraintTop_toBottomOf="@+id/edit_item_price" />
+
     <TextView
         android:id="@+id/edit_item_header"
         android:layout_width="match_parent"
@@ -105,38 +121,54 @@
 
     <Button
         android:id="@+id/edit_item_finish"
-        android:layout_width="212dp"
-        android:layout_height="106dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
         android:onClick="onClick"
         android:text="@string/edit_item_finish"
-        android:textSize="26sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_item_price" />
 
     <Button
         android:id="@+id/edit_item_abort"
-        android:layout_width="140dp"
+        android:layout_width="wrap_content"
         android:layout_height="53dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="24dp"
         android:onClick="onClick"
         android:text="@string/edit_item_abort"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/edit_item_price"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_item_finish" />
 
     <Button
-        android:id="@+id/edit_item_new_category"
-        android:layout_width="230dp"
-        android:layout_height="53dp"
-        android:layout_marginBottom="16dp"
-        android:onClick="onClick"
+        android:id="@+id/edit_item_edit_category"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        android:onClick="editCategory"
         android:text="@string/edit_item_category"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/edit_item_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_item_remove"
+        android:focusable="true"
+        tools:ignore="OnClick" />
+
+    <Button
+        android:id="@+id/edit_item_remove_category"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:onClick="removeCategoryActivity"
+        android:text="@string/edit_item_remove_category"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/edit_item_edit_category"
         app:layout_constraintTop_toBottomOf="@+id/edit_item_finish" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
