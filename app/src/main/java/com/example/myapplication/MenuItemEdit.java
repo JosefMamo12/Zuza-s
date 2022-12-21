@@ -2,11 +2,8 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,14 +19,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -79,7 +73,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        // Create the adapter and set it to the AutoCompleteTextView
+        // Create the adapter and set it to the AutoCompleteTextView.
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, allItems);
         editName.setAdapter(adapter);
@@ -106,6 +100,10 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         return allItemsModels.get(itemName);
     }
 
+    /**
+     * Adds all current items into local memory to perform edit or removal of items.
+     * @param category
+     */
     private void addItems(DataSnapshot category)
     {
         for (DataSnapshot item : category.getChildren())
@@ -143,11 +141,16 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Opens an alert dialog to remove category.
+     * @param view
+     */
     public void removeCategoryActivity(View view)
     {
         final AutoCompleteTextView getCategory = new AutoCompleteTextView(this);
         getCategory.setHint("שם קטגוריה.");
 
+        // From item container, copy all unique values of categories to autocomplete.
         Set<String> categories = new TreeSet<>(itemToCategory.values());
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
@@ -191,12 +194,13 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         if (invalidInput(name, category, price))
             return;
 
-        // Define new item object and add into database under menuItems under categories
+        // Define new item object and add into database under menuItems under new\old category
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems").child(category).child(name);
 
         MenuItemModel itemAdapter = new MenuItemModel(name, description, price);
 
+        // if name is changed, remove old item.
         if (!name.equals(selectedItem.getName()))
         {
             removeItem(selectedItem.getName());
@@ -206,6 +210,9 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         finishMessage("עריכת פריט הושלמה.", true);
     }
 
+    /**
+     * First function of edit category, ask user which old category to rename.
+     */
     private void editCategoryGetOld()
     {
         final AutoCompleteTextView getCategory = new AutoCompleteTextView(this);
@@ -238,6 +245,9 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 }).show();
     }
 
+    /**
+     * Second function of edit category, ask user the new name for the category, then deep copy and remove old one.
+     */
     private void editCategoryGetNew(String toChange)
     {
         final EditText changeCategory = new EditText(this);
@@ -300,6 +310,9 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 .child(name).removeValue();
     }
 
+    /**
+     * Removes the latest item written in the text view under 'name'.
+     */
     private void removeSelectedItem()
     {
         String name = editName.getText().toString().trim();
