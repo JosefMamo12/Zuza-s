@@ -1,24 +1,25 @@
 {
   "project_info": {
     "project_number": "1012911143977",
+    "firebase_url": "https://myapplicaition-default-rtdb.firebaseio.com",
     "project_id": "myapplicaition",
     "storage_bucket": "myapplicaition.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1012911143977:android:b1ee64a63ed130e4023038",
+        "mobilesdk_app_id": "1:1012911143977:android:8c147a35adfa48cd023038",
         "android_client_info": {
           "package_name": "com.example.myapplication"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1012911143977-0s02qq9vfqrf386b4jmhiadjiupcbqrd.apps.googleusercontent.com",
+          "client_id": "1012911143977-hr8v0r5isv9sm0cm3i3llm30i3hknaa3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.myapplication",
-            "certificate_hash": "b7e8d39d7c29502442ccadf53b9ddc7ffce14a8b"
+            "certificate_hash": "3cabe2712ace77062ccbafa8da132b1d977f8976"
           }
         },
         {
