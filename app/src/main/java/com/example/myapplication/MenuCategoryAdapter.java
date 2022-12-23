@@ -90,13 +90,24 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
             {
                 for (DataSnapshot child : snapshot.getChildren())
                 {
-                    Map<String,String> td=(HashMap<String, String>)child.getValue();
-                    assert td != null;
-                    String price = td.get("price");
-                    String name = td.get("name");
-                    String desc = td.get("desc");
-                    MenuItemModel singleItem = new MenuItemModel(name, desc, price);
-                    items.add(singleItem);
+                    // Check if category has no values (empty)
+                    if (child.getValue() instanceof String)
+                        continue;
+
+                    try
+                    {
+                        Map<String,String> td=(HashMap<String, String>)child.getValue();
+                        assert td != null;
+                        String price = td.get("price");
+                        String name = td.get("name");
+                        String desc = td.get("desc");
+                        MenuItemModel singleItem = new MenuItemModel(name, desc, price);
+                        items.add(singleItem);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
                 updateMenuRecyclerView.callback(pos, items);
             }

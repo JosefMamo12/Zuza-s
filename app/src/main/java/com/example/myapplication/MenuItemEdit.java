@@ -2,10 +2,8 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -53,11 +51,11 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
         // Pull all items from database into an arraylist to autocomplete names.
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("menuItems");
+        DatabaseReference categoriesRef = database.getReference("menuItems");
         allItems = new ArrayList<>();
         allItemsModels = new HashMap<>();
         itemToCategory = new HashMap<>();
-        myRef.addValueEventListener(new ValueEventListener() {
+        categoriesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
@@ -72,6 +70,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 System.out.println("Data read from menu failed, err code: " + error.getCode());
             }
         });
+        initCategories();
 
         // Create the adapter and set it to the AutoCompleteTextView.
         ArrayAdapter<String> adapter =
@@ -79,21 +78,39 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         editName.setAdapter(adapter);
 
         // Based on item clicked, autofill rest of info to ease on the manager.
-        editName.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        editName.setOnItemClickListener((adapterView, view, i, id) ->
         {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id)
-            {
-                String itemName = adapter.getItem(i);
-                String itemCategory = itemToCategory.get(itemName);
-                selectedItem = getItem(itemName);
+            String itemName = adapter.getItem(i);
+            String itemCategory = itemToCategory.get(itemName);
+            selectedItem = getItem(itemName);
 
-                editCategory.setText(itemCategory);
-                editDescription.setText(selectedItem.getDesc());
-                editPrice.setText(selectedItem.getPrice());
-            }
+            editCategory.setText(itemCategory);
+            editDescription.setText(selectedItem.getDesc());
+            editPrice.setText(selectedItem.getPrice());
         });
 }
+
+    private void initCategories()
+    {
+        // Read categories which don't have an item yet.
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("menuItems");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren())
+                {
+                    String categoryName = child.getKey();
+                    if (!itemToCategory.containsValue(categoryName))
+                        itemToCategory.put(categoryName , categoryName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("Data read from menu failed, err code: " + error.getCode());
+            }
+        });
+    }
 
     private MenuItemModel getItem(String itemName)
     {
@@ -102,22 +119,32 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Adds all current items into local memory to perform edit or removal of items.
-     * @param category
      */
     private void addItems(DataSnapshot category)
     {
         for (DataSnapshot item : category.getChildren())
         {
-            Map<String,String> td=(HashMap<String, String>)item.getValue();
-            assert td != null;
-            String price = td.get("price");
-            String name = td.get("name");
-            String desc = td.get("desc");
-            MenuItemModel singleItem = new MenuItemModel(name, desc, price);
+            // Check if category has no values (empty)
+            if (item.getValue() instanceof String)
+                continue;
 
-            allItemsModels.put(name, singleItem);
-            allItems.add(name);
-            itemToCategory.put(name, category.getKey());
+            try
+            {
+                Map<String, String> td = (HashMap<String, String>) item.getValue();
+                assert td != null;
+                String price = td.get("price");
+                String name = td.get("name");
+                String desc = td.get("desc");
+                MenuItemModel singleItem = new MenuItemModel(name, desc, price);
+
+                allItemsModels.put(name, singleItem);
+                allItems.add(name);
+                itemToCategory.put(name, category.getKey());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -136,17 +163,16 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
             case R.id.edit_item_abort:
                 finish();
                 break;
-            case R.id.edit_item_remove_category:
-                break;
         }
     }
 
     /**
      * Opens an alert dialog to remove category.
-     * @param view
      */
     public void removeCategoryActivity(View view)
+
     {
+        // Autocomplete categories box
         final AutoCompleteTextView getCategory = new AutoCompleteTextView(this);
         getCategory.setHint("שם קטגוריה.");
 
@@ -157,25 +183,21 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                         categories.toArray(new String[0]));
         getCategory.setAdapter(adapter);
 
+        // Get valid category from user
         new AlertDialog.Builder(this).setTitle("")
                 .setMessage("בחירת קטגוריה קיימת").setView(getCategory)
-                .setPositiveButton("מחיקה", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                        String categoryName = getCategory.getText().toString().trim();
+                .setPositiveButton("מחיקה", (dialog, whichButton) -> {
+                    String categoryName = getCategory.getText().toString().trim();
 
-                        if (!itemToCategory.containsValue(categoryName))
-                        {
-                            finishMessage("אנא בחרי קטגוריה קיימת.", false);
-                            return;
-                        }
-                        removeCategory(categoryName);
-                        finishMessage("מחיקת קטגוריה הושלמה.",false);
+                    if (!itemToCategory.containsValue(categoryName))
+                    {
+                        finishMessage("אנא בחרי קטגוריה קיימת.", false);
+                        return;
                     }
+                    removeCategory(categoryName);
+                    finishMessage("מחיקת קטגוריה הושלמה.",false);
                 })
-                .setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
+                .setNegativeButton("ביטול", (dialog, whichButton) -> {
                 }).show();
     }
 
@@ -186,6 +208,9 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
     private void updateItem()
     {
+        if (selectedItem == null)
+            return;
+
         String name = editName.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
         String category = editCategory.getText().toString().trim();
@@ -226,22 +251,17 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
         new AlertDialog.Builder(this).setTitle("")
                 .setMessage("בחירת קטגוריה קיימת").setView(getCategory)
-                .setPositiveButton("אוקיי את זה לשנות", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                        String toChange = getCategory.getText().toString().trim();
+                .setPositiveButton("אוקיי את זה לשנות", (dialog, whichButton) -> {
+                    String toChange = getCategory.getText().toString().trim();
 
-                        if (!itemToCategory.containsValue(toChange))
-                        {
-                            finishMessage("אנא בחרי קטגוריה קיימת.", false);
-                            return;
-                        }
-                        editCategoryGetNew(toChange);
+                    if (!itemToCategory.containsValue(toChange))
+                    {
+                        finishMessage("אנא בחרי קטגוריה קיימת.", false);
+                        return;
                     }
+                    editCategoryGetNew(toChange);
                 })
-                .setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
+                .setNegativeButton("ביטול", (dialog, whichButton) -> {
                 }).show();
     }
 
@@ -255,25 +275,20 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
         new AlertDialog.Builder(this).setTitle("")
                 .setMessage("בחירת שם חדש").setView(changeCategory)
-                .setPositiveButton("אוקיי לשנות את השם", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton)
+                .setPositiveButton("אוקיי לשנות את השם", (dialog, whichButton) -> {
+                    String afterChange = changeCategory.getText().toString().trim();
+
+                    if (afterChange.isEmpty() || afterChange.equals(toChange))
                     {
-                        String afterChange = changeCategory.getText().toString().trim();
-
-                        if (afterChange.isEmpty() || afterChange.equals(toChange))
-                        {
-                            finishMessage("אנא בחרי שם חדש.", false);
-                            return;
-                        }
-
-                        copyCategory(toChange, afterChange);
-                        removeCategory(toChange);
-                        finishMessage("עריכת קטגוריה הושלמה.", true);
+                        finishMessage("אנא בחרי שם חדש.", false);
+                        return;
                     }
+
+                    copyCategory(toChange, afterChange);
+                    removeCategory(toChange);
+                    finishMessage("עריכת קטגוריה הושלמה.", true);
                 })
-                .setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
+                .setNegativeButton("ביטול", (dialog, whichButton) -> {
                 }).show();
     }
 
@@ -347,15 +362,15 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         t.show();
 
         if (quit)
-        finish();
+            finish();
     }
 
     private void removeItem(String item)
     {
         String category = itemToCategory.get(item);
         assert category != null;
-        FirebaseDatabase.getInstance().getReference("menuItems")
-                .child(category).child(selectedItem.getName()).removeValue();
+        DatabaseReference menu = FirebaseDatabase.getInstance().getReference("menuItems");
+        menu.child(category).child(item).removeValue();
     }
 
     /**
