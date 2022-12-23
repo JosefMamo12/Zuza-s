@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -158,14 +159,21 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                 break;
             case R.id.homeImg:
                 finish();
+                checkIfConnected();
+                startActivity(new Intent(this, HomePage.class));
                 break;
             case R.id.logInImg:
                 startActivity(new Intent(this, Login.class));
                 break;
             case R.id.logOutImg:
-                mAuth.signOut();
-                checkIfAdminConnected();
-                checkIfConnected();
+                if(mAuth.getCurrentUser() != null) {
+                    mAuth.signOut();
+                    checkIfAdminConnected();
+                    checkIfConnected();
+                }else{
+                    Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
+                }
+                break;
 
         }
 

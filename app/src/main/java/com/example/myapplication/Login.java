@@ -1,13 +1,9 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -17,12 +13,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -41,18 +38,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
-import java.util.jar.Attributes;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int RC_SIGN_IN = 1000;
     private FirebaseAuth mAuth;
-    FirebaseFirestore firestore;
+    FirebaseDatabase database;
     private TextView register, forgotPassword;
     private EditText editTextUserName, editTextPassword;
     private ImageView fbBtn, twiterBtn, googleBtn;
@@ -60,10 +58,18 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private ProgressBar progressBar;
 
     CallbackManager callbackManager;
-    GoogleSignInOptions googleSignInOptions;
-    GoogleSignInClient googleSignInClient;
+    private GoogleSignInClient googleSignInClient;
     LoginManager loginManager;
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            startActivity(new Intent(getApplicationContext(), HomePage.class));
+        }
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -73,13 +79,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
 
         mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
         callbackManager = CallbackManager.Factory.create();
-        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
+
         loginManager = LoginManager.getInstance();
-
-
-        firestore = FirebaseFirestore.getInstance();
+        createRequest();
 
         editTextUserName = (EditText) findViewById(R.id.username);
         editTextPassword = (EditText) findViewById(R.id.pass_login);
@@ -105,7 +110,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
-
     }
 
 
@@ -123,10 +127,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 facebookSignIn();
                 break;
             case R.id.google:
-                signIn();
+                signIn2();
                 break;
             case R.id.twiter:
                 twitterSignIn();
+                break;
             case R.id.login:
                 signInWithMail();
                 break;
@@ -142,7 +147,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         handleFacebookAccessToken(loginResult.getAccessToken());
-                        navigateToSecondActivity();
                     }
 
                     @Override
@@ -159,7 +163,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private void twitterSignIn() {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
-        provider.addCustomParameter("lang", "he");
+        provider.addCustomParameter("lang", "en");
         Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
         if (pendingResultTask != null) {
             // There's something already here! Finish the sign-in for your user.
@@ -168,7 +172,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
-                                    navigateToSecondActivity();
                                     Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
                                 }
                             })
@@ -176,7 +179,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(Login.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
         } else {
@@ -186,8 +189,39 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             new OnSuccessListener<AuthResult>() {
                                 @Override
                                 public void onSuccess(AuthResult authResult) {
+                                    String uid = authResult.getUser().getUid();
+                                    DatabaseReference usersReference = database.getReference("Users");
+                                    DatabaseReference uidRef = usersReference.child(uid);
+                                    ValueEventListener eventListener = uidRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (!snapshot.exists()) {
+                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                User userToDatabase = new User();
+                                                userToDatabase.setUid(user.getUid());
+                                                userToDatabase.setEmail(user.getEmail());
+                                                usersReference.child(user.getUid()).setValue(userToDatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Toast.makeText(Login.this, "Uploaded to the database", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                            }
+                                        }
+
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                    uidRef.addListenerForSingleValueEvent(eventListener);
+                                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).
+
+                                            show();
+
                                     navigateToSecondActivity();
-                                    Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
 
                                 }
                             })
@@ -195,10 +229,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(Login.this, "Authentication Failed.", Toast.LENGTH_SHORT).show();
+                                    System.out.println(e.getMessage());
+                                    Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
         }
+
     }
 
 
@@ -208,7 +244,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void signInWithMail() {
-
         String mail = editTextUserName.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
@@ -233,7 +268,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     if (task.isSuccessful()) {
                         Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
-                        startActivity(new Intent(this, HomePage.class));
+                        navigateToSecondActivity();
 
 
                     } else {
@@ -246,40 +281,72 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+
     private void handleFacebookAccessToken(AccessToken accessToken) {
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
+        System.out.println(accessToken.getToken());
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+
                     Toast.makeText(Login.this, "Authentication Succeed.",
                             Toast.LENGTH_SHORT).show();
-                    FirebaseUser user = mAuth.getCurrentUser();
+                    String uid = mAuth.getCurrentUser().getUid();
+                    DatabaseReference userRef = database.getReference("Users");
+                    DatabaseReference uidRef = userRef.child(uid);
+                    ValueEventListener eventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                User userToDatabase = new User();
+                                userToDatabase.setUid(user.getUid());
+                                userToDatabase.setEmail(user.getEmail());
+                                userRef.child(user.getUid()).setValue(userToDatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(Login.this, "Uploaded to the database", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("TAG", error.getMessage());
+                        }
+                    };
+                    navigateToSecondActivity();
+                    uidRef.addListenerForSingleValueEvent(eventListener);
                 } else {
-                    Toast.makeText(Login.this, "Authentication failed.",
+                    Toast.makeText(Login.this, task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1000) {
+        if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try {
                 task.getResult(ApiException.class);
                 GoogleSignInAccount account = task.getResult();
                 fireBaseAuthWithGoogle(account.getIdToken());
-                navigateToSecondActivity();
+
             } catch (ApiException e) {
-                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 
     private void fireBaseAuthWithGoogle(String idToken) {
         progressBar.setVisibility(View.VISIBLE);
@@ -288,8 +355,36 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
+                    String uid = mAuth.getCurrentUser().getUid();
+                    DatabaseReference userRef = database.getReference("Users");
+                    DatabaseReference uidRef = userRef.child(uid);
+                    ValueEventListener eventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (!snapshot.exists()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                User userToDatabase = new User();
+                                userToDatabase.setUid(user.getUid());
+                                userToDatabase.setEmail(user.getEmail());
+                                userToDatabase.setFullName(user.getDisplayName());
+                                userRef.child(user.getUid()).setValue(userToDatabase).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(Login.this, "Uploaded to the database", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("TAG", error.getMessage());
+                        }
+                    };
+                    uidRef.addListenerForSingleValueEvent(eventListener);
                 }
+                navigateToSecondActivity();
                 Toast.makeText(Login.this, "Authentication Succeed.", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
             }
@@ -297,9 +392,54 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
+    private void createRequest() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+    }
+
+    private void signIn2() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == RC_SIGN_IN) {
+//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//            try {
+//                GoogleSignInAccount account = task.getResult(ApiException.class);
+//                fireBaseAuthWithGoogle(account);
+//            } catch (ApiException e) {
+//                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
+
+    private void fireBaseAuthWithGoogle(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            navigateToSecondActivity();
+                        } else {
+                            Toast.makeText(Login.this, "Sorry auth failed", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
+    }
+
 
     private void navigateToSecondActivity() {
-        finish();
         Intent intent = new Intent(Login.this, HomePage.class);
         startActivity(intent);
     }

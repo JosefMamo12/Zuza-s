@@ -38,8 +38,6 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
 
         Button resetPasswordButton = (Button) findViewById(R.id.resetPassword);
         resetPasswordButton.setOnClickListener(this);
-
-
         auth = FirebaseAuth.getInstance();
 
 
@@ -56,6 +54,9 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.resetPassword:
                 resetPassword();
+                finish();
+                startActivity(new Intent(getApplicationContext(),Login.class));
+
         }
 
     }

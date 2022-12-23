@@ -5,6 +5,13 @@ public class User {
     private String fullName, age, email, uid;
     private boolean isAdmin;
 
+    public User(String fullName, String age, String email, String uid) {
+        this.fullName = fullName;
+        this.age = age;
+        this.email = email;
+        this.uid = uid;
+    }
+
     public String getFullName() {
         return fullName;
     }
@@ -57,6 +64,7 @@ public class User {
     }
 
     public User() {
+        this.isAdmin = false;
 
     }
 

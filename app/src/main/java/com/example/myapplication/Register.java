@@ -102,12 +102,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            User user = new User(fullName, age, email);
+
+                            User user = new User(fullName, age, email,mAuth.getCurrentUser().getUid());
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             Toast.makeText(Register.this, "User has been registered successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getApplicationContext(),HomePage.class));
                                             progressBar.setVisibility(View.GONE);
                                         } else {
                                             Toast.makeText(Register.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
