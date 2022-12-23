@@ -35,7 +35,6 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        showAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 

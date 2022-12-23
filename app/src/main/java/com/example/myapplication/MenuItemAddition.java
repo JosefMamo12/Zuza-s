@@ -40,17 +40,15 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         editName = (EditText) findViewById(R.id.add_item_name);
         editDescription = (EditText) findViewById(R.id.add_item_description);
 
-        /* Make category autocomplete based on existing categories*/
 
         // Get a reference to the AutoCompleteTextView in the layout
+        // Make category section autocomplete based on existing categories.
             editCategory = (AutoCompleteTextView) findViewById(R.id.add_item_category);
 
 
-            /*
-            Pull from database categories into an arraylist.
-            (Unless this is done here, and not a separate function, the array list will be empty
-            even though there are categories).
-             */
+        //Pull from database categories into an arraylist.
+        //(Unless this is done here, and not a separate function, the array list will be empty
+        //even though there are categories).
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems");
         currentCategories = new ArrayList<>();
@@ -61,7 +59,9 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
                 for (DataSnapshot child : snapshot.getChildren())
                 {
                     String category = child.getKey();
-                    currentCategories.add(category);
+
+                    if (!currentCategories.contains(category))
+                        currentCategories.add(category);
                 }
             }
 
@@ -130,11 +130,11 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
 
         // Define new item object and add into database under menuItems under categories
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("menuItems").child(category).child(name);
+        DatabaseReference categoryRef = database.getReference("menuItems").child(category).child(name);
 
         MenuItemModel itemAdapter = new MenuItemModel(name, description, price);
 
-        myRef.setValue(itemAdapter);
+        categoryRef.setValue(itemAdapter);
         Toast t = new Toast(this);
         t.setText("הוספת פריט הושלמה.");
         t.show();
@@ -151,8 +151,8 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
     private boolean invalidInput(String name, String category, String price)
     {
         try {
-            if (name.isEmpty()) {
-                editName.setError("אנא בחרי שם.");
+            if (name.length() < 2) {
+                editName.setError("אנא בחרי שם ארוך יותר.");
                 editName.requestFocus();
                 return true;
             }
@@ -166,19 +166,32 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
                 editCategory.requestFocus();
                 return true;
             }
-            if (price.isEmpty()) {
+            if (price.isEmpty())
+            {
                 editPrice.setError("אנא בחרי מחיר.");
                 editPrice.requestFocus();
                 return true;
-            } else if (Double.parseDouble(price) < 0) {
-                editPrice.setError("אנא בחרי מחיר לא שלילי.");
+            }
+
+            try
+            {
+                if (Double.parseDouble(price) < 0)
+                {
+                    editPrice.setError("אנא בחרי מחיר לא שלילי.");
+                    editPrice.requestFocus();
+                    return true;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                editPrice.setError("אנא כתבי מספר תקין.");
                 editPrice.requestFocus();
                 return true;
             }
         }
         catch (Exception ignored)
         {
-
+            return true;
         }
         return false;
     }

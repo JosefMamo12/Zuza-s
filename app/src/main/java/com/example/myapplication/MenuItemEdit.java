@@ -51,11 +51,11 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
         // Pull all items from database into an arraylist to autocomplete names.
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("menuItems");
+        DatabaseReference categoriesRef = database.getReference("menuItems");
         allItems = new ArrayList<>();
         allItemsModels = new HashMap<>();
         itemToCategory = new HashMap<>();
-        myRef.addValueEventListener(new ValueEventListener() {
+        categoriesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
@@ -78,7 +78,8 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         editName.setAdapter(adapter);
 
         // Based on item clicked, autofill rest of info to ease on the manager.
-        editName.setOnItemClickListener((adapterView, view, i, id) -> {
+        editName.setOnItemClickListener((adapterView, view, i, id) ->
+        {
             String itemName = adapter.getItem(i);
             String itemCategory = itemToCategory.get(itemName);
             selectedItem = getItem(itemName);
@@ -162,8 +163,6 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
             case R.id.edit_item_abort:
                 finish();
                 break;
-            case R.id.edit_item_remove_category:
-                break;
         }
     }
 
@@ -171,7 +170,9 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
      * Opens an alert dialog to remove category.
      */
     public void removeCategoryActivity(View view)
+
     {
+        // Autocomplete categories box
         final AutoCompleteTextView getCategory = new AutoCompleteTextView(this);
         getCategory.setHint("שם קטגוריה.");
 
@@ -182,6 +183,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                         categories.toArray(new String[0]));
         getCategory.setAdapter(adapter);
 
+        // Get valid category from user
         new AlertDialog.Builder(this).setTitle("")
                 .setMessage("בחירת קטגוריה קיימת").setView(getCategory)
                 .setPositiveButton("מחיקה", (dialog, whichButton) -> {
@@ -206,6 +208,9 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
     private void updateItem()
     {
+        if (selectedItem == null)
+            return;
+
         String name = editName.getText().toString().trim();
         String description = editDescription.getText().toString().trim();
         String category = editCategory.getText().toString().trim();
@@ -364,8 +369,8 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     {
         String category = itemToCategory.get(item);
         assert category != null;
-        FirebaseDatabase.getInstance().getReference("menuItems")
-                .child(category).child(selectedItem.getName()).removeValue();
+        DatabaseReference menu = FirebaseDatabase.getInstance().getReference("menuItems");
+        menu.child(category).child(item).removeValue();
     }
 
     /**
