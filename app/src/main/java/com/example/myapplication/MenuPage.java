@@ -145,7 +145,6 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {

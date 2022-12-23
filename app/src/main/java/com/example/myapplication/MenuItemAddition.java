@@ -102,23 +102,19 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         Context temp_context = this;
         new AlertDialog.Builder(this).setTitle("")
                 .setMessage("שם הקטגוריה").setView(newCategory)
-                .setPositiveButton("יאללה זורם", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String category = newCategory.getText().toString().trim();
-                            // Add category
-                            // Define new item object and add into database under menuItems.
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference myRef = database.getReference("menuItems").child(category);
+                .setPositiveButton("יאללה זורם", (dialog, whichButton) -> {
+                    String category = newCategory.getText().toString().trim();
+                        // Add category
+                        // Define new item object and add into database under menuItems.
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("menuItems").child(category);
 
-                            myRef.setValue(category);
-                            Toast t = new Toast(temp_context);
-                            t.setText("הוספת קטגוריה הושלמה.");
-                            t.show();
-                    }
+                        myRef.setValue(category);
+                        Toast t = new Toast(temp_context);
+                        t.setText("הוספת קטגוריה הושלמה.");
+                        t.show();
                 })
-                .setNegativeButton("ביטול", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                    }
+                .setNegativeButton("ביטול", (dialog, whichButton) -> {
                 }).show();
     }
 
