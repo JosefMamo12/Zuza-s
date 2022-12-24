@@ -91,15 +91,21 @@
         android:layout_height="120dp"
         android:background="@color/Black_Olive"
         android:contentDescription="TODO"
+        android:id="@+id/cant_create_id"
         android:src="@drawable/zuzalogo" />
 
     <ImageView
         android:id="@+id/imgView"
+        android:layout_below="@+id/cant_create_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="250dp"
+        android:visibility="invisible"
+        android:contentDescription="TODO" />
 
-    <include layout="@layout/navigation_bar" />
+
+        <include layout="@layout/navigation_bar"
+            tools:showIN="@layout/profile_activity"/>
+
 
 
 </RelativeLayout>

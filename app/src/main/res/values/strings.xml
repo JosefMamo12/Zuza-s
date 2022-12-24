@@ -53,5 +53,6 @@
     <string name="edit_item_finish">סיום עריכת פריט</string>
     <string name="edit_item_menu">עריכת פריט</string>
     <string name="edit_item_remove">הסרת פריט נבחר</string>
+    <string name="account_settings">Account Settings</string>
 
 </resources>
