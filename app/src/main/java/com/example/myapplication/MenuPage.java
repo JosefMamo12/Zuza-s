@@ -35,7 +35,9 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     FirebaseDatabase database;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        showAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
@@ -48,7 +50,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         // Read categories models from database.
         ArrayList<MenuCategoryModel> categories = new ArrayList<>();
         DatabaseReference myRef = database.getReference("menuItems");
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren())

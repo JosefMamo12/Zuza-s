@@ -35,6 +35,8 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     private HashMap<String, MenuItemModel> allItemsModels;
     private ArrayList<String> allItems;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -284,6 +286,12 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                         return;
                     }
 
+                    if (invalidNamePath(afterChange))
+                    {
+                        finishMessage("אנא בחרי שם תקין.", false);
+                        return;
+                    }
+
                     copyCategory(toChange, afterChange);
                     removeCategory(toChange);
                     finishMessage("עריכת קטגוריה הושלמה.", true);
@@ -382,14 +390,29 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
      */
     private boolean invalidInput(String name, String category, String price)
     {
-        try {
-            if (name.isEmpty()) {
-                editName.setError("אנא בחרי שם.");
+        String invalid = MenuItemAddition.INVALID;
+        try
+        {
+            if (name.length() < 2) {
+                editName.setError("אנא בחרי שם ארוך יותר.");
                 editName.requestFocus();
                 return true;
             }
-            if (category.isEmpty()) {
+            if (invalidNamePath(name))
+            {
+                editName.setError("אנא כתבי שם תקין (בלי " + invalid + ")");
+                editName.requestFocus();
+                return true;
+            }
+            if (category.isEmpty())
+            {
                 editCategory.setError("אנא בחרי קטגוריה.");
+                editCategory.requestFocus();
+                return true;
+            }
+            if (invalidNamePath(category))
+            {
+                editCategory.setError("אנא כתבי קטגוריה תקינה (בלי " + invalid + ")");
                 editCategory.requestFocus();
                 return true;
             }
@@ -398,19 +421,45 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 editCategory.requestFocus();
                 return true;
             }
-            if (price.isEmpty()) {
+            if (price.isEmpty())
+            {
                 editPrice.setError("אנא בחרי מחיר.");
                 editPrice.requestFocus();
                 return true;
-            } else if (Double.parseDouble(price) < 0) {
-                editPrice.setError("אנא בחרי מחיר לא שלילי.");
+            }
+
+            try
+            {
+                if (Double.parseDouble(price) < 0)
+                {
+                    editPrice.setError("אנא בחרי מחיר לא שלילי.");
+                    editPrice.requestFocus();
+                    return true;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                editPrice.setError("אנא כתבי מספר תקין.");
                 editPrice.requestFocus();
                 return true;
             }
         }
         catch (Exception ignored)
         {
+            return true;
+        }
+        return false;
+    }
 
+    private boolean invalidNamePath(String name)
+    {
+        String invalid = MenuItemAddition.INVALID;
+        for (int i = 0; i < invalid.length(); i++)
+        {
+            if (name.indexOf(invalid.charAt(i)) != -1)
+            {
+                return true;
+            }
         }
         return false;
     }

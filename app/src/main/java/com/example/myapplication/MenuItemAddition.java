@@ -2,7 +2,6 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MenuItemAddition extends AppCompatActivity implements View.OnClickListener
@@ -27,6 +27,9 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
     private EditText editName, editDescription, editPrice;
     private AutoCompleteTextView editCategory;
     private ArrayList<String> currentCategories;
+
+    public static final String INVALID = ".#$[]";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -132,7 +135,10 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference categoryRef = database.getReference("menuItems").child(category).child(name);
 
-        MenuItemModel itemAdapter = new MenuItemModel(name, description, price);
+        // Add decimal points to price if there is none.
+        DecimalFormat df = new DecimalFormat("0.00");
+        MenuItemModel itemAdapter = new MenuItemModel(name, description,
+                df.format(Double.parseDouble(price))+"");
 
         categoryRef.setValue(itemAdapter);
         Toast t = new Toast(this);
@@ -150,14 +156,28 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
      */
     private boolean invalidInput(String name, String category, String price)
     {
-        try {
+        try
+        {
             if (name.length() < 2) {
                 editName.setError("אנא בחרי שם ארוך יותר.");
                 editName.requestFocus();
                 return true;
             }
-            if (category.isEmpty()) {
+            if (invalidNamePath(name))
+            {
+                editName.setError("אנא כתבי שם תקין (בלי " + INVALID + ")");
+                editName.requestFocus();
+                return true;
+            }
+            if (category.isEmpty())
+            {
                 editCategory.setError("אנא בחרי קטגוריה.");
+                editCategory.requestFocus();
+                return true;
+            }
+            if (invalidNamePath(category))
+            {
+                editCategory.setError("אנא כתבי קטגוריה תקינה (בלי " + INVALID + ")");
                 editCategory.requestFocus();
                 return true;
             }
@@ -192,6 +212,20 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         catch (Exception ignored)
         {
             return true;
+        }
+        return false;
+    }
+
+    private boolean invalidNamePath(String name)
+    {
+        for (int i = 0; i < INVALID.length(); i++)
+        {
+            if (name.indexOf(INVALID.charAt(i)) != -1)
+            {
+                editName.setError("אנא כתבי שם תקין (בלי .#$[])");
+                editName.requestFocus();
+                return true;
+            }
         }
         return false;
     }
