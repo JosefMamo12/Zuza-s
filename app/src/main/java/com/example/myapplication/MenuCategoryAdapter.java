@@ -21,11 +21,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class to pull categories from database and display them into a view holder.
+ * Based on recent clicked, category will be highlighted and items displayed.
+ */
 public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapter.MenuCategoryViewHolder>
 {
 
     private final ArrayList<MenuCategoryModel> categories;
     private ArrayList<MenuItemModel> items;
+
+    // Implement data display updater.
     UpdateMenuRecyclerView updateMenuRecyclerView;
     Activity activity;
     boolean check = true;
@@ -64,6 +70,7 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
 
         if (check)
         {
+            categories.remove(0);
             updateData(currentItem, pos);
             updateMenuRecyclerView.callback(pos, items);
             check = false;

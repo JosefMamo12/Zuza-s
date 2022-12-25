@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     private Button addItemBtn, editItemBtn;
     ArrayList<MenuItemModel> items = new ArrayList<>();
     MenuItemAdapter menuItemAdapter;
+    MenuCategoryAdapter menuCategoryAdapter;
     FirebaseAuth mAuth;
     RecyclerView recyclerViewCategories, recyclerViewItems;
     FirebaseDatabase database;
@@ -40,6 +42,10 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+<<<<<<< HEAD
+=======
+        ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
+>>>>>>> d341e25b909841d4b0e2528b3e6f18e8948c4f4a
 
         database = FirebaseDatabase.getInstance();
         addItemBtn = (Button) findViewById(R.id.menu_add_item_manager);
@@ -50,12 +56,18 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         // Read categories models from database.
         ArrayList<MenuCategoryModel> categories = new ArrayList<>();
         DatabaseReference myRef = database.getReference("menuItems");
+<<<<<<< HEAD
         ValueEventListener eventListener = new ValueEventListener() {
+=======
+
+        ValueEventListener evl =  new ValueEventListener(){
+>>>>>>> d341e25b909841d4b0e2528b3e6f18e8948c4f4a
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren()) {
                     // Give the default zuza logo as icon, could be changed later.
                     categories.add(new MenuCategoryModel(R.drawable.z_logo, child.getKey()));
+                    menuItemAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -64,12 +76,20 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                 System.out.println("Data read from menu failed, err code: " + error.getCode());
             }
         };
+<<<<<<< HEAD
         myRef.addValueEventListener(eventListener);
+=======
+
+        myRef.addValueEventListener(evl);
+
+        categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי!"));
+        // Category viewer
+>>>>>>> d341e25b909841d4b0e2528b3e6f18e8948c4f4a
         recyclerViewCategories = findViewById(R.id.rv_1);
 
         // {this} is given twice as argument, as this class both is an activity and also
         // implements the interface updateMenuRecyclerView.
-        MenuCategoryAdapter menuCategoryAdapter = new MenuCategoryAdapter(categories, this, this);
+        menuCategoryAdapter = new MenuCategoryAdapter(categories, this, this);
         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCategories.setAdapter(menuCategoryAdapter);
 
@@ -180,9 +200,12 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
     }
 
+    /**
+     * Notify recycler that the category changed, load new category.
+     */
     public void callback(int position, ArrayList<MenuItemModel> items) {
         menuItemAdapter = new MenuItemAdapter(items);
-        menuItemAdapter.notifyDataSetChanged();
+        menuItemAdapter.notifyItemInserted(position);
         recyclerViewItems.setAdapter(menuItemAdapter);
     }
 

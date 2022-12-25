@@ -12,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Class to pull items from database and display them into a view holder.
+ * Only one category is loaded each time.
+ */
 public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuItemHolder>
 {
     public ArrayList<MenuItemModel> menuItemModels;
@@ -20,6 +24,10 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     {
         this.menuItemModels = menuItemModels;
     }
+
+    /**
+     * Class for a single item to load into the view holder.
+     */
     public class MenuItemHolder extends RecyclerView.ViewHolder
     {
         public ImageView imageView;
@@ -42,6 +50,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     @Override
     public MenuItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
+        // Binds XML items to current activity. (Menu page)
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_single_item_layout, parent, false);
         return new MenuItemHolder(view);
     }
@@ -49,7 +58,10 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     @Override
     public void onBindViewHolder(@NonNull MenuItemHolder holder, int position)
     {
+        // Get item parameters.
         MenuItemModel currentItem = menuItemModels.get(position);
+
+        // Can be changed to get an image based on item's name
         holder.imageView.setImageResource(R.drawable.z_logo);
         holder.name.setText(currentItem.getName());
         holder.desc.setText(currentItem.getDesc());
