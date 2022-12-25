@@ -172,6 +172,9 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                     Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.accountImg:
+                startActivity(new Intent(getApplicationContext(),Profile.class));
+                break;
 
         }
 

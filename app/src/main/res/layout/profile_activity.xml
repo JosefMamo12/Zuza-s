@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:paddingTop="10dp"
             android:orientation="vertical">
 
             <com.mikhaellopez.circularimageview.CircularImageView
@@ -39,8 +40,9 @@
                 android:layout_height="2dp"
                 android:layout_marginTop="10dp"
                 android:background="@android:color/black"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
+               android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                />
 
         </LinearLayout>
 
@@ -73,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:textColor="@color/grey_font"
-                android:text="Josef Mamo"
+                android:text="Full Name"
                 android:textSize="18dp" />
         </LinearLayout>
         <View
@@ -136,7 +138,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_person_24" />
+                android:src="@drawable/ic_baseline_mail_24" />
 
             <TextView
                 android:layout_width="wrap_content"
