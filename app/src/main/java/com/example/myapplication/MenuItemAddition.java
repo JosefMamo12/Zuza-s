@@ -43,7 +43,6 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         editName = (EditText) findViewById(R.id.add_item_name);
         editDescription = (EditText) findViewById(R.id.add_item_description);
 
-
         // Get a reference to the AutoCompleteTextView in the layout
         // Make category section autocomplete based on existing categories.
             editCategory = (AutoCompleteTextView) findViewById(R.id.add_item_category);
@@ -99,6 +98,9 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * Opens an alert box to inquire user about new category's name, check validity and writes to data.
+     */
     private void addCategory()
     {
         final EditText newCategory = new EditText(this);
@@ -121,6 +123,9 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
                 }).show();
     }
 
+    /**
+     * Checks all input boxes and writes a new item into database if it's valid.
+     */
     private void addItem()
     {
         String name = editName.getText().toString().trim();

@@ -25,7 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
+public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView
+{
     private ImageView logInImg, logOutImg, accountImg, homePageImg;
     private Button addItemBtn, editItemBtn;
     boolean isAdmin;
@@ -39,11 +40,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        showAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
-        ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
 
         database = FirebaseDatabase.getInstance();
         addItemBtn = (Button) findViewById(R.id.menu_add_item_manager);
@@ -60,9 +58,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren())
                 {
-                    // Give the default zuza logo as icon, could be changed later.
+                    // Give the default zuza logo as icon, could be expanded to have a unique image.
                     categories.add(new MenuCategoryModel(R.drawable.z_logo, child.getKey()));
-                    menuItemAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -74,7 +71,9 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         myRef.addValueEventListener(evl);
 
+        // Dummy button to lure user.
         categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי!"));
+
         // Category viewer
         recyclerViewCategories = findViewById(R.id.rv_1);
 

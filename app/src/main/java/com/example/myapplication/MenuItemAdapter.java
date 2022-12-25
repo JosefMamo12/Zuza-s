@@ -28,7 +28,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     /**
      * Class for a single item to load into the view holder.
      */
-    public class MenuItemHolder extends RecyclerView.ViewHolder
+    public static class MenuItemHolder extends RecyclerView.ViewHolder
     {
         public ImageView imageView;
         public TextView name;
