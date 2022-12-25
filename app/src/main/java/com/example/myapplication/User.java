@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+/**
+ *
+ */
 public class User {
 
     private String fullName, age, email, uid;

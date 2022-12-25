@@ -118,6 +118,7 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
                         String desc = td.get("desc");
                         MenuItemModel singleItem = new MenuItemModel(name, desc, price);
                         items.add(singleItem);
+
                     }
                     catch (Exception e)
                     {
