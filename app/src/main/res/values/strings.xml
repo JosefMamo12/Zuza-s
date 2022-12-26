@@ -54,5 +54,6 @@
     <string name="edit_item_menu">עריכת פריט</string>
     <string name="edit_item_remove">הסרת פריט נבחר</string>
     <string name="account_settings">Account Settings</string>
+    <string name="edit_profile">Edit Profile</string>
 
 </resources>

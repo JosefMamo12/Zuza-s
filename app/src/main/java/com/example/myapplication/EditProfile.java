@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,109 +17,48 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * Profile class,
- * content layout - profile_activity
- * this page created to see end user details.
- * the user can change his profile details, and change his profile picture.
- */
-
-public class Profile extends AppCompatActivity implements View.OnClickListener {
+public class EditProfile extends AppCompatActivity implements View.OnClickListener {
 
     private final int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
 
-    private TextView fullName, age, email,editProfile;
-    private ImageView logInImg;
-    private ImageView accountImg;
-    private ImageView logOutImg;
-    private ImageView menuFoodImage;
-    private FirebaseAuth mAuth;
-    private CircularImageView profilePic;
-    private FirebaseDatabase userDatabase;
     FirebaseStorage storage;
     StorageReference storageReference;
-
+    EditText fullName;
+    EditText age;
+    EditText address;
+    EditText city;
+    TextView changeProfilePic;
+    FirebaseAuth mAuth;
+    FirebaseDatabase userDatabase;
+    ImageView logInImg, accountImg, arrow;
+    CircularImageView profilePic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile_activity);
-
-        navBarInitializer();
-        profilePageInitializer();
-        fillTheMissingDetails();
+        setContentView(R.layout.edit_profile_activity);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-    }
-
-    private void fillTheMissingDetails() {
-        String uid = mAuth.getCurrentUser().getUid();
-        DatabaseReference userRef = userDatabase.getReference("Users");
-        DatabaseReference uidRef = userRef.child(uid);
-        ValueEventListener eventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                assert user != null;
-                if (user.getFullName() != null) {
-                    fullName.setText(user.getFullName());
-                }
-                if (user.getAge() != null) {
-                    age.setText(user.getAge());
-                }
-                if (user.getEmail() != null) {
-                    email.setText(user.getEmail());
-                }
-                if (user.getUrl() != null) {
-                    retrievePhotoFromStorage(user.getUrl());
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Profile.this, error.getCode(), Toast.LENGTH_SHORT).show();
-
-            }
-        };
-        uidRef.addListenerForSingleValueEvent(eventListener);
-    }
-
-    private void profilePageInitializer() {
-        fullName = (TextView) findViewById(R.id.profile_full_name);
-        age = (TextView) findViewById(R.id.profile_age);
-        email = (TextView) findViewById(R.id.profile_mail);
-        ImageView addImage = (ImageView) findViewById(R.id.add_profile_picture);
-        ImageView arrow = (ImageView) findViewById(R.id.arrow);
-        ImageView imageView = findViewById(R.id.imgView);
-        profilePic = (CircularImageView) findViewById(R.id.profile_photo);
-        editProfile = (TextView) findViewById(R.id.edit_profile);
-
-        editProfile.setOnClickListener(this);
-        addImage.setOnClickListener(this);
-        arrow.setOnClickListener(this);
+        navBarInitializer();
+        editProfileInitializer();
     }
 
     public void navBarInitializer() {
@@ -149,6 +86,19 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         checkIfConnected();
     }
 
+    public void editProfileInitializer() {
+        fullName = (EditText) findViewById(R.id.edit_profile_f_name);
+        age = (EditText) findViewById(R.id.edit_profile_age);
+        address = (EditText) findViewById(R.id.edit_profile_address);
+        city = (EditText) findViewById(R.id.edit_profile_city);
+        profilePic = (CircularImageView) findViewById(R.id.edit_profile_photo);
+        changeProfilePic = (TextView) findViewById(R.id.change_profile_picture);
+        arrow = (ImageView) findViewById(R.id.edit_arrow);
+
+        arrow.setOnClickListener(this);
+        changeProfilePic.setOnClickListener(this);
+    }
+
     private void checkIfConnected() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -158,39 +108,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             logInImg.setVisibility(View.VISIBLE);
             accountImg.setVisibility(View.INVISIBLE);
         }
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.arrow:
-                finish();
-                break;
-            case R.id.menuFoodImg:
-                startActivity(new Intent(this, MenuPage.class));
-                break;
-            case R.id.logOutImg:
-                if (mAuth.getCurrentUser() != null) {
-                    mAuth.signOut();
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), HomePage.class));
-                    checkIfConnected();
-                    Toast.makeText(this, "User successfully logged out", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
-                }
-            case R.id.edit_profile:
-                startActivity(new Intent(getApplicationContext(),EditProfile.class));
-                break;
-            case R.id.homeImg:
-                startActivity(new Intent(getApplicationContext(), HomePage.class));
-                break;
-            case R.id.add_profile_picture:
-                selectImage();
-                break;
-        }
-
     }
 
     private void selectImage() {
@@ -235,14 +152,14 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                     String uid = mAuth.getCurrentUser().getUid();
                     DatabaseReference userRef = userDatabase.getReference("Users");
                     userRef.child(uid).child("url").setValue(name);
-                    Toast.makeText(Profile.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Image Uploaded!!", Toast.LENGTH_SHORT).show();
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(Profile.this, "Falied: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -254,20 +171,36 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private void retrievePhotoFromStorage(String name) {
-        storageReference.child(name).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profilePic);
-            }
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.edit_arrow:
+                finish();
+                break;
+            case R.id.menuFoodImg:
+                startActivity(new Intent(this, MenuPage.class));
+                break;
+            case R.id.logOutImg:
+                if (mAuth.getCurrentUser() != null) {
+                    mAuth.signOut();
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), HomePage.class));
+                    checkIfConnected();
+                    Toast.makeText(this, "User successfully logged out", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
+                }
+            case R.id.edit_profile:
+                startActivity(new Intent(getApplicationContext(), EditProfile.class));
+                break;
+            case R.id.homeImg:
+                startActivity(new Intent(getApplicationContext(), HomePage.class));
+                break;
+            case R.id.change_profile_picture:
+                selectImage();
+                break;
+        }
 
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Profile.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
-
-
 }

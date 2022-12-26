@@ -32,14 +32,29 @@
             tools:ignore="ContentDescription" />
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/menuImg"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="20dp"
-        android:src="@drawable/ic_baseline_menu_24"
-        tools:ignore="ContentDescription" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/menuImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:src="@drawable/ic_baseline_content_paste_search_36"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/shop_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            android:src="@drawable/ic_baseline_shopping_cart_36"
+            tools:ignore="ContentDescription" />
+
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/homeImg"

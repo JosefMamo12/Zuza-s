@@ -244,7 +244,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 1000);
