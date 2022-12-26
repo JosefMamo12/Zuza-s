@@ -46,6 +46,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
+/**
+ * Login class
+ * Content layout - activity_login
+ * regular login activity with 4 login methods:
+ * Facebook authentication, Google authentication, Twitter authentication and email + password authentication.
+ * each one of the possible authentication are getting updated in our realtime Users database, in addition to firebase authentication.
+ */
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private static final int RC_SIGN_IN = 1000;
@@ -76,40 +83,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
-        mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        callbackManager = CallbackManager.Factory.create();
-
-
-        loginManager = LoginManager.getInstance();
-        createRequest();
-
-        editTextUserName = (EditText) findViewById(R.id.username);
-        editTextPassword = (EditText) findViewById(R.id.pass_login);
-
-        register = (TextView) findViewById(R.id.register);
-        register.setOnClickListener(this);
-
-        forgotPassword = (TextView) findViewById(R.id.forgotPass);
-        forgotPassword.setOnClickListener(this);
-
-        fbBtn = (ImageView) findViewById(R.id.facebook);
-        fbBtn.setOnClickListener(this);
-
-        googleBtn = (ImageView) findViewById(R.id.google);
-        googleBtn.setOnClickListener(this);
-
-        twiterBtn = (ImageView) findViewById(R.id.twiter);
-        twiterBtn.setOnClickListener(this);
-
-        login = (Button) findViewById(R.id.login);
-        login.setOnClickListener(this);
-
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-
+        LoginIntializer();
     }
 
 
@@ -137,6 +111,39 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
 
         }
+
+    }
+
+    private void LoginIntializer() {
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        callbackManager = CallbackManager.Factory.create();
+
+        loginManager = LoginManager.getInstance();
+        createRequest();
+
+        editTextUserName = (EditText) findViewById(R.id.username);
+        editTextPassword = (EditText) findViewById(R.id.pass_login);
+
+        register = (TextView) findViewById(R.id.register);
+        register.setOnClickListener(this);
+
+        forgotPassword = (TextView) findViewById(R.id.forgotPass);
+        forgotPassword.setOnClickListener(this);
+
+        fbBtn = (ImageView) findViewById(R.id.facebook);
+        fbBtn.setOnClickListener(this);
+
+        googleBtn = (ImageView) findViewById(R.id.google);
+        googleBtn.setOnClickListener(this);
+
+        twiterBtn = (ImageView) findViewById(R.id.twiter);
+        twiterBtn.setOnClickListener(this);
+
+        login = (Button) findViewById(R.id.login);
+        login.setOnClickListener(this);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,9 +31,9 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:background="@color/Rifle_Green"
-        android:drawableStart="@drawable/ic_baseline_person_outline_24"
+        android:drawableStart="@drawable/ic_baseline_email_24_white"
         android:drawablePadding="20dp"
-        android:hint="@string/username"
+        android:hint="@string/email"
         android:inputType="text"
         android:padding="20dp"
         android:textColor="@color/white"
@@ -110,7 +110,7 @@
         android:textColor="#ffff"
         android:textSize="18sp"
         android:textStyle="bold" />
-    
+
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -118,53 +118,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-         />
+        android:visibility="gone" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/socialicon"
-        android:text="Or sign in with"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-black"
         android:layout_centerHorizontal="true"
+        android:fontFamily="sans-serif-black"
+        android:text="Or sign in with"
         android:textSize="20dp"
-        />
+        android:textStyle="bold" />
+
     <LinearLayout
         android:id="@+id/socialicon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
 
-       <ImageView
-           android:id="@+id/facebook"
-           android:layout_width="48dp"
-           android:layout_height="48dp"
-           android:layout_margin="20dp"
-           android:src="@drawable/fb"
-            />
+        <ImageView
+            android:id="@+id/facebook"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="20dp"
+            android:src="@drawable/fb" />
+
         <ImageView
             android:id="@+id/google"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"
-            android:src="@drawable/google"
-            />
+            android:src="@drawable/google" />
+
         <ImageView
             android:id="@+id/twiter"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="20dp"
-            android:src="@drawable/twitter"
-            />
-
+            android:src="@drawable/twitter" />
 
 
     </LinearLayout>
-
-
 
 
 </RelativeLayout>

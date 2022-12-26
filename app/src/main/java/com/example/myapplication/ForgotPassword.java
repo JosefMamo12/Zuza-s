@@ -17,7 +17,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-
+/**
+ * ForgotPassword class
+ * Content layout - activity_forgot_password
+ * If end user forgot his password - easy send to email method for easy password reset.
+ */
 public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
 
     private EditText emailEditText;
@@ -80,8 +84,11 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(ForgotPassword.this, "Check your email to reset your password", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    finish();
                 } else {
                     Toast.makeText(ForgotPassword.this, "Try again! Something wrong happened", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });

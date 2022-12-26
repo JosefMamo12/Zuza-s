@@ -42,10 +42,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-<<<<<<< HEAD
-=======
         ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
->>>>>>> d341e25b909841d4b0e2528b3e6f18e8948c4f4a
 
         database = FirebaseDatabase.getInstance();
         addItemBtn = (Button) findViewById(R.id.menu_add_item_manager);
@@ -55,13 +52,11 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         // Read categories models from database.
         ArrayList<MenuCategoryModel> categories = new ArrayList<>();
-        DatabaseReference myRef = database.getReference("menuItems");
-<<<<<<< HEAD
-        ValueEventListener eventListener = new ValueEventListener() {
-=======
 
-        ValueEventListener evl =  new ValueEventListener(){
->>>>>>> d341e25b909841d4b0e2528b3e6f18e8948c4f4a
+        DatabaseReference myRef = database.getReference("menuItems");
+
+        ValueEventListener evl = new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren()) {
@@ -76,30 +71,31 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                 System.out.println("Data read from menu failed, err code: " + error.getCode());
             }
         };
-<<<<<<< HEAD
-        myRef.addValueEventListener(eventListener);
-=======
 
         myRef.addValueEventListener(evl);
 
-        categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי!"));
+        // Dummy Node
         // Category viewer
->>>>>>> d341e25b909841d4b0e2528b3e6f18e8948c4f4a
+        categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי"));
         recyclerViewCategories = findViewById(R.id.rv_1);
 
         // {this} is given twice as argument, as this class both is an activity and also
         // implements the interface updateMenuRecyclerView.
         menuCategoryAdapter = new MenuCategoryAdapter(categories, this, this);
-        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewCategories.setLayoutManager(new
+
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCategories.setAdapter(menuCategoryAdapter);
 
         // Initialize items and bind them to a recycle view.
         items = new ArrayList<>();
         recyclerViewItems = findViewById(R.id.rv_2);
+
         menuItemAdapter = new MenuItemAdapter(items);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewItems.setAdapter(menuItemAdapter);
     }
+
 
     private void checkIfAdminConnected() {
         DatabaseReference userRef = database.getReference("Users");
@@ -235,3 +231,4 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     }
 
 }
+
