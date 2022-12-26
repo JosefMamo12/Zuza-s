@@ -37,33 +37,29 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     FirebaseDatabase database;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
-
-        ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
-
         database = FirebaseDatabase.getInstance();
         addItemBtn = (Button) findViewById(R.id.menu_add_item_manager);
         editItemBtn = (Button) findViewById(R.id.menu_edit_item_manager);
         navBarInitializer();
 
-
         // Read categories models from database.
         ArrayList<MenuCategoryModel> categories = new ArrayList<>();
-
         DatabaseReference myRef = database.getReference("menuItems");
-
-
         ValueEventListener evl = new ValueEventListener() {
 
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot child : snapshot.getChildren()) {
+                for (DataSnapshot child : snapshot.getChildren())
+                {
                     // Give the default zuza logo as icon, could be expanded to have a unique image.
-                    categories.add(new MenuCategoryModel(R.drawable.z_logo, child.getKey()));
+                    MenuCategoryModel md = new MenuCategoryModel(R.drawable.z_logo, child.getKey());
+                    if (!categories.contains(md))
+                        categories.add(md);
                 }
             }
 
@@ -221,7 +217,6 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                 for (DataSnapshot child : snapshot.getChildren()) {
                     System.out.println("---Category start---");
                     System.out.println("{" + child + "}");
-//                    getChildrenOf(child);
                     System.out.println("---Category end---");
                 }
             }

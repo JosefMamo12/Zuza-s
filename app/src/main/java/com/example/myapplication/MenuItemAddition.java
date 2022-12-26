@@ -3,6 +3,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -30,6 +31,10 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
 
     public static final String INVALID = ".#$[]";
 
+    public MenuItemAddition()
+    {
+        // For testing.
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,19 +114,41 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
                 .setMessage("שם הקטגוריה").setView(newCategory)
                 .setPositiveButton("יאללה זורם", (dialog, whichButton) -> {
                     String category = newCategory.getText().toString().trim();
+
                         // Add category
                         // Define new item object and add into database under menuItems.
-                        FirebaseDatabase database = FirebaseDatabase.getInstance();
-                        DatabaseReference myRef = database.getReference("menuItems").child(category);
-
-                        myRef.setValue(category);
+                        String endMessage;
+                        if (addCategory(category))
+                        {
+                            endMessage = "הוספת קטגוריה הושלמה.";
+                        }
+                        else
+                        {
+                            endMessage = "לא הושלמה הוספת קטגוריה.";
+                        }
                         Toast t = new Toast(temp_context);
-                        t.setText("הוספת קטגוריה הושלמה.");
+                        t.setText(endMessage);
                         t.show();
                 })
                 .setNegativeButton("ביטול", (dialog, whichButton) -> {
                 }).show();
     }
+
+    private boolean addCategory(String category)
+    {
+        try
+        {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("menuItems").child(category);
+            myRef.setValue(category);
+        }
+        catch(Exception e)
+        {
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Checks all input boxes and writes a new item into database if it's valid.
@@ -137,19 +164,42 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
             return;
 
         // Define new item object and add into database under menuItems under categories
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference categoryRef = database.getReference("menuItems").child(category).child(name);
+
 
         // Add decimal points to price if there is none.
         DecimalFormat df = new DecimalFormat("0.00");
         MenuItemModel itemAdapter = new MenuItemModel(name, description,
                 df.format(Double.parseDouble(price))+"");
 
-        categoryRef.setValue(itemAdapter);
+
+        String endMessage;
+        if (addItem(itemAdapter, category))
+        {
+            endMessage = "הוספת פריט הושלמה.";
+        }
+        else
+        {
+            endMessage = "לא הושלמה הוספת פריט";
+        }
         Toast t = new Toast(this);
-        t.setText("הוספת פריט הושלמה.");
+        t.setText(endMessage);
         t.show();
         finish();
+    }
+
+    protected boolean addItem(MenuItemModel item, String category)
+    {
+        try
+        {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference categoryRef = database.getReference("menuItems").child(category).child(item.getName());
+            categoryRef.setValue(item);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return true;
     }
 
     /**
