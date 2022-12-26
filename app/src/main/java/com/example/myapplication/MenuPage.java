@@ -28,6 +28,7 @@ import java.util.Iterator;
 public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
     private ImageView logInImg, logOutImg, accountImg, homePageImg;
     private Button addItemBtn, editItemBtn;
+    boolean isAdmin;
     ArrayList<MenuItemModel> items = new ArrayList<>();
     MenuItemAdapter menuItemAdapter;
     MenuCategoryAdapter menuCategoryAdapter;
@@ -35,12 +36,11 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     RecyclerView recyclerViewCategories, recyclerViewItems;
     FirebaseDatabase database;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        showAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
 
         ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -55,14 +55,15 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         DatabaseReference myRef = database.getReference("menuItems");
 
+
         ValueEventListener evl = new ValueEventListener() {
+
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    // Give the default zuza logo as icon, could be changed later.
+                    // Give the default zuza logo as icon, could be expanded to have a unique image.
                     categories.add(new MenuCategoryModel(R.drawable.z_logo, child.getKey()));
-                    menuItemAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -74,9 +75,11 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         myRef.addValueEventListener(evl);
 
+
         // Dummy Node
         // Category viewer
         categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי"));
+
         recyclerViewCategories = findViewById(R.id.rv_1);
 
         // {this} is given twice as argument, as this class both is an activity and also
