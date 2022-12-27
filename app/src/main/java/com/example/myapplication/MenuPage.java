@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
-    private ImageView logInImg, logOutImg, accountImg, homePageImg;
+    private ImageView logInImg, logOutImg, accountImg, homePageImg, shoppingCart, mangerReport;
     private Button addItemBtn, editItemBtn;
     boolean isAdmin;
     ArrayList<MenuItemModel> items = new ArrayList<>();
@@ -37,8 +38,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     FirebaseDatabase database;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         database = FirebaseDatabase.getInstance();
@@ -50,12 +50,9 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         ArrayList<MenuCategoryModel> categories = new ArrayList<>();
         DatabaseReference myRef = database.getReference("menuItems");
         ValueEventListener evl = new ValueEventListener() {
-
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot child : snapshot.getChildren())
-                {
+                for (DataSnapshot child : snapshot.getChildren()) {
                     // Give the default zuza logo as icon, could be expanded to have a unique image.
                     MenuCategoryModel md = new MenuCategoryModel(R.drawable.z_logo, child.getKey());
                     if (!categories.contains(md))
@@ -97,44 +94,46 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
 
     private void checkIfAdminConnected() {
-        DatabaseReference userRef = database.getReference("Users");
-
         if (mAuth.getCurrentUser() == null) {
             addItemBtn.setVisibility(View.INVISIBLE);
             editItemBtn.setVisibility(View.INVISIBLE);
+
             return;
         }
         String uid = mAuth.getCurrentUser().getUid();
-        userRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userRef = database.getReference("Users");
+        DatabaseReference childRef = userRef.child(uid);
+        ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshotChild : snapshot.getChildren()) {
-                    User user = dataSnapshotChild.getValue(User.class);
-                    if (user.getUid() == null) {
-                        user.setUid(dataSnapshotChild.getKey());
-                    }
-                    if (user.getUid().equals(uid) && user.isAdmin()) {
-                        addItemBtn.setVisibility(View.VISIBLE);
-                        editItemBtn.setVisibility(View.VISIBLE);
-                        break;
-                    }
+                User user = snapshot.getValue(User.class);
+                if (user.isAdmin()) {
+                    addItemBtn.setVisibility(View.VISIBLE);
+                    editItemBtn.setVisibility(View.VISIBLE);
+                    shoppingCart.setVisibility(View.INVISIBLE);
+                    mangerReport.setVisibility(View.VISIBLE);
+
+                } else {
                     addItemBtn.setVisibility(View.INVISIBLE);
                     editItemBtn.setVisibility(View.INVISIBLE);
+                    shoppingCart.setVisibility(View.VISIBLE);
+                    mangerReport.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(MenuPage.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
-
-
+        };
+        childRef.addListenerForSingleValueEvent(valueEventListener);
     }
 
     public void navBarInitializer() {
         mAuth = FirebaseAuth.getInstance();
         /* Image views of navBar*/
+        mangerReport = (ImageView) findViewById(R.id.report);
+        shoppingCart = (ImageView) findViewById(R.id.shop_cart);
         logInImg = (ImageView) findViewById(R.id.logInImg);
         accountImg = (ImageView) findViewById(R.id.accountImg);
         logOutImg = (ImageView) findViewById(R.id.logOutImg);
@@ -144,6 +143,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         accountImg.setOnClickListener(this);
         logOutImg.setOnClickListener(this);
         homePageImg.setOnClickListener(this);
+        shoppingCart.setOnClickListener(this);
+        mangerReport.setOnClickListener(this);
 
         checkIfConnected();
         checkIfAdminConnected();

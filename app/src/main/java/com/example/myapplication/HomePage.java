@@ -34,7 +34,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -50,7 +54,10 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
     private ImageView logInImg;
     private ImageView accountImg;
-
+    private ImageView shoppingCart;
+    private ImageView managerReport;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
     FirebaseAuth mAuth;
 
 
@@ -82,26 +89,67 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
     }
 
 
+    private void checkIfAdminConnected() {
+
+        if (mAuth.getCurrentUser() == null) {
+            managerReport.setVisibility(View.INVISIBLE);
+            shoppingCart.setVisibility(View.VISIBLE);
+            return;
+        }
+        String uid = mAuth.getCurrentUser().getUid();
+        DatabaseReference userRef = database.getReference("Users");
+        DatabaseReference childRef = userRef.child(uid);
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (user.getUid().equals(uid) && user.isAdmin()) {
+                    managerReport.setVisibility(View.VISIBLE);
+                    shoppingCart.setVisibility(View.INVISIBLE);
+                } else {
+                    managerReport.setVisibility(View.INVISIBLE);
+                    shoppingCart.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(HomePage.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        };
+        childRef.addListenerForSingleValueEvent(valueEventListener);
+    }
+
+
     public void navBarInitializer() {
+        database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         /* Image views of navBar*/
+        shoppingCart = (ImageView) findViewById(R.id.shop_cart);
+        managerReport = (ImageView) findViewById(R.id.report);
         logInImg = (ImageView) findViewById(R.id.logInImg);
         accountImg = (ImageView) findViewById(R.id.accountImg);
         ImageView logOutImg = (ImageView) findViewById(R.id.logOutImg);
         ImageView menuFoodImg = (ImageView) findViewById(R.id.menuFoodImg);
+
 
         /* OnClick Listeners  */
         logInImg.setOnClickListener(this);
         accountImg.setOnClickListener(this);
         logOutImg.setOnClickListener(this);
         menuFoodImg.setOnClickListener(this);
+        shoppingCart.setOnClickListener(this);
+        managerReport.setOnClickListener(this);
 
         checkIfConnected();
+        checkIfAdminConnected();
     }
 
     private void checkIfConnected() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
+
             logInImg.setVisibility(View.INVISIBLE);
             accountImg.setVisibility(View.VISIBLE);
         } else {
