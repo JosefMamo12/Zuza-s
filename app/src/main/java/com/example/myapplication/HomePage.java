@@ -60,6 +60,12 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
     private DatabaseReference databaseReference;
     FirebaseAuth mAuth;
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkIfAdminConnected();
+        checkIfConnected();
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -142,8 +148,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
         shoppingCart.setOnClickListener(this);
         managerReport.setOnClickListener(this);
 
-        checkIfConnected();
-        checkIfAdminConnected();
+
     }
 
     private void checkIfConnected() {

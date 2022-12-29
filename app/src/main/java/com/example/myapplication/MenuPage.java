@@ -38,6 +38,13 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     FirebaseDatabase database;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        checkIfConnected();
+        checkIfAdminConnected();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
@@ -68,7 +75,6 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         myRef.addValueEventListener(evl);
 
-
         // Dummy Node
         // Category viewer
         categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי"));
@@ -97,7 +103,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         if (mAuth.getCurrentUser() == null) {
             addItemBtn.setVisibility(View.INVISIBLE);
             editItemBtn.setVisibility(View.INVISIBLE);
-
+            shoppingCart.setVisibility(View.VISIBLE);
+            mangerReport.setVisibility(View.INVISIBLE);
             return;
         }
         String uid = mAuth.getCurrentUser().getUid();
@@ -146,8 +153,6 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         shoppingCart.setOnClickListener(this);
         mangerReport.setOnClickListener(this);
 
-        checkIfConnected();
-        checkIfAdminConnected();
     }
 
     private void checkIfConnected() {

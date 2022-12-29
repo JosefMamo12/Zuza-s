@@ -5,6 +5,7 @@ package com.example.myapplication;
  */
 public class User {
 
+    public String phoneNumber;
     private String fullName, age, email, uid, url;
     private boolean isAdmin;
 
@@ -75,6 +76,10 @@ public class User {
                 ", uid='" + uid + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
     }
 }
 

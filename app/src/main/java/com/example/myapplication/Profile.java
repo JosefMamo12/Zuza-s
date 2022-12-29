@@ -51,11 +51,14 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private final int PICK_IMAGE_REQUEST = 22;
     private Uri filePath;
 
-    private TextView fullName, age, email,editProfile;
+    private TextView fullName, age, email, editProfile;
     private ImageView logInImg;
     private ImageView accountImg;
     private ImageView logOutImg;
     private ImageView menuFoodImage;
+    private TextView phoneNumber;
+    private ImageView managerReport;
+    private ImageView shoppingCart;
     private FirebaseAuth mAuth;
     private CircularImageView profilePic;
     private FirebaseDatabase userDatabase;
@@ -70,11 +73,44 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
         navBarInitializer();
         profilePageInitializer();
+        checkIfAdminConnected();
         fillTheMissingDetails();
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+    }
+
+    private void checkIfAdminConnected() {
+        if (mAuth.getCurrentUser() == null) {
+            managerReport.setVisibility(View.INVISIBLE);
+            shoppingCart.setVisibility(View.VISIBLE);
+            return;
+        }
+        String uid = mAuth.getCurrentUser().getUid();
+        DatabaseReference userRef = userDatabase.getReference("Users");
+        DatabaseReference childRef = userRef.child(uid);
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                assert user != null;
+                if (user.isAdmin()) {
+                    managerReport.setVisibility(View.VISIBLE);
+                    shoppingCart.setVisibility(View.INVISIBLE);
+                } else {
+                    managerReport.setVisibility(View.INVISIBLE);
+                    shoppingCart.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        };
+        childRef.addListenerForSingleValueEvent(valueEventListener);
     }
 
     private void fillTheMissingDetails() {
@@ -95,7 +131,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 if (user.getEmail() != null) {
                     email.setText(user.getEmail());
                 }
+                if (user.getPhoneNumber() != null) {
+                    phoneNumber.setText(user.getPhoneNumber());
+                }
                 if (user.getUrl() != null) {
+                    findViewById(R.id.add_profile_picture).setVisibility(View.INVISIBLE);
                     retrievePhotoFromStorage(user.getUrl());
                 }
             }
@@ -118,7 +158,12 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         ImageView imageView = findViewById(R.id.imgView);
         profilePic = (CircularImageView) findViewById(R.id.profile_photo);
         editProfile = (TextView) findViewById(R.id.edit_profile);
+        managerReport = (ImageView) findViewById(R.id.report);
+        shoppingCart = (ImageView) findViewById(R.id.shop_cart);
+        phoneNumber = (TextView) findViewById(R.id.phone_number);
 
+        managerReport.setOnClickListener(this);
+        shoppingCart.setOnClickListener(this);
         editProfile.setOnClickListener(this);
         addImage.setOnClickListener(this);
         arrow.setOnClickListener(this);
@@ -180,8 +225,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 } else {
                     Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
                 }
+                break;
             case R.id.edit_profile:
-                startActivity(new Intent(getApplicationContext(),EditProfile.class));
+                startActivity(new Intent(getApplicationContext(), EditProfile.class));
                 break;
             case R.id.homeImg:
                 startActivity(new Intent(getApplicationContext(), HomePage.class));
