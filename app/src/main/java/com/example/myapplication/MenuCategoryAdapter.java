@@ -116,6 +116,7 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
                         String price = td.get("price");
                         String name = td.get("name");
                         String desc = td.get("desc");
+                        String url = td.get("imageUrl");
                         MenuItemModel singleItem = new MenuItemModel(name, desc, price);
                         items.add(singleItem);
 

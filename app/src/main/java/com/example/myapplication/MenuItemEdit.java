@@ -25,8 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MenuItemEdit extends AppCompatActivity implements View.OnClickListener
-{
+public class MenuItemEdit extends AppCompatActivity implements View.OnClickListener {
     private EditText editCategory, editDescription, editPrice;
     private AutoCompleteTextView editName;
     private MenuItemModel selectedItem;
@@ -36,10 +35,8 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     private ArrayList<String> allItems;
 
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_edit_item);
 
@@ -49,7 +46,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         editName = (AutoCompleteTextView) findViewById(R.id.edit_item_name);
         editDescription = (EditText) findViewById(R.id.edit_item_description);
         editCategory = (EditText) findViewById(R.id.edit_item_category);
-        editPrice = (EditText)  findViewById(R.id.edit_item_price);
+        editPrice = (EditText) findViewById(R.id.edit_item_price);
 
         // Pull all items from database into an arraylist to autocomplete names.
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -59,10 +56,8 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         itemToCategory = new HashMap<>();
         categoriesRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot)
-            {
-                for (DataSnapshot category : snapshot.getChildren())
-                {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot category : snapshot.getChildren()) {
                     addItems(category);
                 }
             }
@@ -90,20 +85,18 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
             editDescription.setText(selectedItem.getDesc());
             editPrice.setText(selectedItem.getPrice());
         });
-}
+    }
 
-    private void initCategories()
-    {
+    private void initCategories() {
         // Read categories which don't have an item yet.
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("menuItems");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot child : snapshot.getChildren())
-                {
+                for (DataSnapshot child : snapshot.getChildren()) {
                     String categoryName = child.getKey();
                     if (!itemToCategory.containsValue(categoryName))
-                        itemToCategory.put(categoryName , categoryName);
+                        itemToCategory.put(categoryName, categoryName);
                 }
             }
 
@@ -114,24 +107,20 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private MenuItemModel getItem(String itemName)
-    {
+    private MenuItemModel getItem(String itemName) {
         return allItemsModels.get(itemName);
     }
 
     /**
      * Adds all current items into local memory to perform edit or removal of items.
      */
-    private void addItems(DataSnapshot category)
-    {
-        for (DataSnapshot item : category.getChildren())
-        {
+    private void addItems(DataSnapshot category) {
+        for (DataSnapshot item : category.getChildren()) {
             // Check if category has no values (empty)
             if (item.getValue() instanceof String)
                 continue;
 
-            try
-            {
+            try {
                 Map<String, String> td = (HashMap<String, String>) item.getValue();
                 assert td != null;
                 String price = td.get("price");
@@ -142,9 +131,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 allItemsModels.put(name, singleItem);
                 allItems.add(name);
                 itemToCategory.put(name, category.getKey());
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -152,10 +139,8 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.edit_item_finish:
                 updateItem();
                 break;
@@ -171,9 +156,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     /**
      * Opens an alert dialog to remove category.
      */
-    public void removeCategoryActivity(View view)
-
-    {
+    public void removeCategoryActivity(View view) {
         // Autocomplete categories box
         final AutoCompleteTextView getCategory = new AutoCompleteTextView(this);
         getCategory.setHint("שם קטגוריה.");
@@ -191,13 +174,12 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("מחיקה", (dialog, whichButton) -> {
                     String categoryName = getCategory.getText().toString().trim();
 
-                    if (!itemToCategory.containsValue(categoryName))
-                    {
+                    if (!itemToCategory.containsValue(categoryName)) {
                         finishMessage("אנא בחרי קטגוריה קיימת.", false);
                         return;
                     }
                     removeCategory(categoryName);
-                    finishMessage("מחיקת קטגוריה הושלמה.",false);
+                    finishMessage("מחיקת קטגוריה הושלמה.", false);
                 })
                 .setNegativeButton("ביטול", (dialog, whichButton) -> {
                 }).show();
@@ -208,8 +190,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         super.onPointerCaptureChanged(hasCapture);
     }
 
-    private void updateItem()
-    {
+    private void updateItem() {
         if (selectedItem == null)
             return;
 
@@ -228,8 +209,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
         MenuItemModel itemAdapter = new MenuItemModel(name, description, price);
 
         // if name is changed, remove old item.
-        if (!name.equals(selectedItem.getName()))
-        {
+        if (!name.equals(selectedItem.getName())) {
             removeItem(selectedItem.getName());
         }
 
@@ -240,8 +220,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     /**
      * First function of edit category, ask user which old category to rename.
      */
-    private void editCategoryGetOld()
-    {
+    private void editCategoryGetOld() {
         final AutoCompleteTextView getCategory = new AutoCompleteTextView(this);
         getCategory.setHint("שם ישן.");
 
@@ -256,8 +235,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("אוקיי את זה לשנות", (dialog, whichButton) -> {
                     String toChange = getCategory.getText().toString().trim();
 
-                    if (!itemToCategory.containsValue(toChange))
-                    {
+                    if (!itemToCategory.containsValue(toChange)) {
                         finishMessage("אנא בחרי קטגוריה קיימת.", false);
                         return;
                     }
@@ -270,8 +248,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     /**
      * Second function of edit category, ask user the new name for the category, then deep copy and remove old one.
      */
-    private void editCategoryGetNew(String toChange)
-    {
+    private void editCategoryGetNew(String toChange) {
         final EditText changeCategory = new EditText(this);
         changeCategory.setHint("שם חדש.");
 
@@ -280,14 +257,12 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 .setPositiveButton("אוקיי לשנות את השם", (dialog, whichButton) -> {
                     String afterChange = changeCategory.getText().toString().trim();
 
-                    if (afterChange.isEmpty() || afterChange.equals(toChange))
-                    {
+                    if (afterChange.isEmpty() || afterChange.equals(toChange)) {
                         finishMessage("אנא בחרי שם חדש.", false);
                         return;
                     }
 
-                    if (invalidNamePath(afterChange))
-                    {
+                    if (invalidNamePath(afterChange)) {
                         finishMessage("אנא בחרי שם תקין.", false);
                         return;
                     }
@@ -300,35 +275,29 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 }).show();
     }
 
-    private void copyCategory(String oldName, String newName)
-    {
+    private void copyCategory(String oldName, String newName) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("menuItems").child(newName);
         myRef.setValue(newName);
 
         database.getReference("menuItems").child(oldName).
-                addValueEventListener(new ValueEventListener()
-                {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot)
-            {
-                for (DataSnapshot item : snapshot.getChildren())
-                {
-                    assert item.getKey() != null;
-                    myRef.child(item.getKey()).setValue(item.getValue());
-                }
-            }
+                addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot item : snapshot.getChildren()) {
+                            assert item.getKey() != null;
+                            myRef.child(item.getKey()).setValue(item.getValue());
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error)
-            {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
     }
 
-    private void removeCategory(String name)
-    {
+    private void removeCategory(String name) {
         FirebaseDatabase.getInstance().getReference("menuItems")
                 .child(name).removeValue();
     }
@@ -336,35 +305,28 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
     /**
      * Removes the latest item written in the text view under 'name'.
      */
-    private void removeSelectedItem()
-    {
+    private void removeSelectedItem() {
         String name = editName.getText().toString().trim();
-        try
-        {
-            if (name.isEmpty())
-            {
+        try {
+            if (name.isEmpty()) {
                 editName.setError("אנא בחרי שם.");
                 editName.requestFocus();
                 return;
             }
 
-            if (!allItems.contains(name))
-            {
+            if (!allItems.contains(name)) {
                 editName.setError("אנא בחרי פריט קיים.");
                 editName.requestFocus();
                 return;
             }
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
 
         }
         removeItem(name);
         finishMessage("הסרת פריט הושלמה.", true);
     }
 
-    private void finishMessage(String s, boolean quit)
-    {
+    private void finishMessage(String s, boolean quit) {
         Toast t = new Toast(this);
         t.setText(s);
         t.show();
@@ -373,8 +335,7 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
             finish();
     }
 
-    private void removeItem(String item)
-    {
+    private void removeItem(String item) {
         String category = itemToCategory.get(item);
         assert category != null;
         DatabaseReference menu = FirebaseDatabase.getInstance().getReference("menuItems");
@@ -383,35 +344,31 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
 
     /**
      * Validates input of item to be added.
-     * @param name product name
+     *
+     * @param name     product name
      * @param category product category
-     * @param price product price
+     * @param price    product price
      * @return false if only all the given inputs are valid and can be used to create a new item.
      */
-    private boolean invalidInput(String name, String category, String price)
-    {
+    private boolean invalidInput(String name, String category, String price) {
         String invalid = MenuItemAddition.INVALID;
-        try
-        {
+        try {
             if (name.length() < 2) {
                 editName.setError("אנא בחרי שם ארוך יותר.");
                 editName.requestFocus();
                 return true;
             }
-            if (invalidNamePath(name))
-            {
+            if (invalidNamePath(name)) {
                 editName.setError("אנא כתבי שם תקין (בלי " + invalid + ")");
                 editName.requestFocus();
                 return true;
             }
-            if (category.isEmpty())
-            {
+            if (category.isEmpty()) {
                 editCategory.setError("אנא בחרי קטגוריה.");
                 editCategory.requestFocus();
                 return true;
             }
-            if (invalidNamePath(category))
-            {
+            if (invalidNamePath(category)) {
                 editCategory.setError("אנא כתבי קטגוריה תקינה (בלי " + invalid + ")");
                 editCategory.requestFocus();
                 return true;
@@ -421,51 +378,40 @@ public class MenuItemEdit extends AppCompatActivity implements View.OnClickListe
                 editCategory.requestFocus();
                 return true;
             }
-            if (price.isEmpty())
-            {
+            if (price.isEmpty()) {
                 editPrice.setError("אנא בחרי מחיר.");
                 editPrice.requestFocus();
                 return true;
             }
 
-            try
-            {
-                if (Double.parseDouble(price) < 0)
-                {
+            try {
+                if (Double.parseDouble(price) < 0) {
                     editPrice.setError("אנא בחרי מחיר לא שלילי.");
                     editPrice.requestFocus();
                     return true;
                 }
-            }
-            catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 editPrice.setError("אנא כתבי מספר תקין.");
                 editPrice.requestFocus();
                 return true;
             }
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
             return true;
         }
         return false;
     }
 
-    private boolean invalidNamePath(String name)
-    {
+    private boolean invalidNamePath(String name) {
         String invalid = MenuItemAddition.INVALID;
-        for (int i = 0; i < invalid.length(); i++)
-        {
-            if (name.indexOf(invalid.charAt(i)) != -1)
-            {
+        for (int i = 0; i < invalid.length(); i++) {
+            if (name.indexOf(invalid.charAt(i)) != -1) {
                 return true;
             }
         }
         return false;
     }
 
-    public void editCategory(View view)
-    {
+    public void editCategory(View view) {
         editCategoryGetOld();
     }
 }

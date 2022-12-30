@@ -5,6 +5,7 @@ public class MenuItemModel
     private String name;
     private String desc;
     private String price;
+    private String imageUrl;
 
     public MenuItemModel()
     {
@@ -18,6 +19,7 @@ public class MenuItemModel
         this.name = name;
         this.desc = desc;
         this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -44,4 +46,21 @@ public class MenuItemModel
         this.desc = desc;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "MenuItemModel{" +
+                "name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", price='" + price + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }
