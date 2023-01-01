@@ -1,17 +1,17 @@
-package com.example.myapplication;
+package com.example.myapplication.EditProfile;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.HomePage;
+import com.example.myapplication.MenuPage;
+import com.example.myapplication.Profile;
+import com.example.myapplication.R;
+import com.example.myapplication.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +40,7 @@ import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -43,7 +49,6 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
 
     FirebaseAuth mAuth;
     FirebaseStorage firebaseStorage;
-    StorageReference storageReference;
 
     EditText fullNameEditText;
     EditText ageEditText;
@@ -56,18 +61,17 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
     private ImageView managerReport;
 
     private FirebaseDatabase userDatabase;
+    HashMap<Integer, String> myHash;
+    String pName, pAge, pPhone;
 
-    private final int PICK_IMAGE_REQUEST = 22;
+
     private Uri filePath;
-
-    ProgressBar progressBar;
-
-    public static final HashMap<Integer, String> myHash = new HashMap<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile_activity);
+        myHash = new HashMap<>();
         firebaseStorage = FirebaseStorage.getInstance();
         navBarInitializer();
         editProfileInitializer();
@@ -75,21 +79,7 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         MyListener listener = new MyListener() {
             @Override
             public void onDataLoaded() {
-                if (myHash.containsKey(0)) {
-                    fullNameEditText.setText(myHash.get(0));
-                    fullNameEditText.setEnabled(false);
-                }
-                if (myHash.containsKey(1)) {
-                    ageEditText.setText(myHash.get(1));
-                }
-                if (myHash.containsKey(2)) {
-                    phoneNumberEditText.setText(myHash.get(2));
-                }
-                if (myHash.containsKey(3)) {
-                    retrievePhotoFromStorage(myHash.get(3));
-                }
-
-
+                fillViewOptions();
             }
 
             @Override
@@ -97,38 +87,36 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
                 Log.d(message, message);
             }
         };
-        EditProfileController.beforeUpdating(listener);
-        fillViewOptions();
+        EditProfileController.beforeUpdating(listener, myHash);
     }
+
 
     protected void fillViewOptions() {
-        myHash.size();
-        if (myHash.size() > 0) {
-            if (myHash.get(0) != null) {
-                fullNameEditText.setText(myHash.get(0));
-                fullNameEditText.setEnabled(false);
-            }
-            if (myHash.get(1) != null) {
-                ageEditText.setText(myHash.get(1));
-                ageEditText.setEnabled(false);
-            }
-            if (myHash.get(2) != null) {
-                phoneNumberEditText.setText(myHash.get(2));
-                phoneNumberEditText.setEnabled(false);
-            }
-            if (myHash.get(3) != null) {
-                retrievePhotoFromStorage(myHash.get(3));
-            }
+        if (myHash.containsKey(0)) {
+            fullNameEditText.setText(myHash.get(0));
+            pName = myHash.get(0);
         }
-
+        if (myHash.containsKey(1)) {
+            ageEditText.setText(myHash.get(1));
+            pAge = myHash.get(1);
+        }
+        if (myHash.containsKey(2)) {
+            phoneNumberEditText.setText(myHash.get(2));
+            pPhone = myHash.get(2);
+        }
+        if (myHash.containsKey(3)) {
+            retrievePhotoFromStorage(myHash.get(3));
+        }
     }
+
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.edit_arrow:
-                finish();
+            case R.id.accountImg:
+                startActivity(new Intent(this, Profile.class));
                 break;
             case R.id.menuFoodImg:
                 startActivity(new Intent(this, MenuPage.class));
@@ -138,7 +126,6 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
                     mAuth.signOut();
                     finish();
                     startActivity(new Intent(getApplicationContext(), HomePage.class));
-                    checkIfConnected();
                     Toast.makeText(this, "User successfully logged out", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
@@ -154,9 +141,17 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
                 String fullName = fullNameEditText.getText().toString();
                 String age = ageEditText.getText().toString();
                 String phoneNumber = phoneNumberEditText.getText().toString();
+                if (EditProfileController.checkBeforeAfterProfile(pName, pAge, pPhone, fullName, age, phoneNumber)) {
+                    Toast.makeText(this, "Nothing has been changed!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 int returnedError = EditProfileController.updateProfile(fullName, age, phoneNumber);
                 switch (returnedError) {
                     case 0:
+                        if (filePath != null) {
+                            uploadImage();
+                            System.out.println("Upload image");
+                        }
                         Toast.makeText(getApplicationContext(), "Private profile updated has been changed successfully", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
@@ -201,7 +196,6 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         mAuth = FirebaseAuth.getInstance();
         userDatabase = FirebaseDatabase.getInstance();
 
-
         /* Image views of navBar*/
         ImageView homeImg = (ImageView) findViewById(R.id.homeImg);
         logInImg = (ImageView) findViewById(R.id.logInImg);
@@ -210,7 +204,6 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         managerReport = (ImageView) findViewById(R.id.report);
         ImageView logOutImg = (ImageView) findViewById(R.id.logOutImg);
         ImageView menuFoodImg = (ImageView) findViewById(R.id.menuFoodImg);
-
 
         /* OnClick Listeners  */
         homeImg.setOnClickListener(this);
@@ -232,7 +225,6 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         profilePic = (CircularImageView) findViewById(R.id.edit_profile_photo);
         changeProfilePic = (TextView) findViewById(R.id.change_profile_picture);
         arrow = (ImageView) findViewById(R.id.edit_arrow);
-
 
         updateChanges.setOnClickListener(this);
         arrow.setOnClickListener(this);
@@ -257,6 +249,26 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         startActivityForResult(Intent.createChooser(intent, "Select Image from here ..."), PICK_IMAGE_REQUEST);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        int PICK_IMAGE_REQUEST = 22;
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore
+                        .Images
+                        .Media
+                        .getBitmap(
+                                getContentResolver(),
+                                filePath);
+                profilePic.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void retrievePhotoFromStorage(String name) {
         StorageReference storageReference = firebaseStorage.getReference();
         storageReference.child(name).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -279,10 +291,10 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
             String name = "images/" + UUID.randomUUID().toString();
+            StorageReference ref = firebaseStorage.getReference();
+            StorageReference imageRef = ref.child(name);
 
-            StorageReference ref = storageReference.child(name);
-
-            ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            imageRef.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();

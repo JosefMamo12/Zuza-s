@@ -7,13 +7,11 @@ import org.junit.Assert;
 public class MenuItemAdditionTest extends TestCase {
 
 
-    public void testAddItem()
-    {
+    public void testAddItem() {
         MenuItemAddition testPage = new MenuItemAddition();
-        Assert.assertFalse(testPage.addItem(new MenuItemModel("ex", "ex", "1.00"), "non-existent"));
+        Assert.assertFalse(testPage.addItem(new MenuItemModel("ex","ex", "ex", "1.00", ""), "non-existent"));
     }
 
-    public void testOnClick()
-    {
+    public void testOnClick() {
     }
 }

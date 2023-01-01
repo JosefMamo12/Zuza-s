@@ -50,7 +50,7 @@ public class MenuItemAddition extends AppCompatActivity implements View.OnClickL
 
         // Get a reference to the AutoCompleteTextView in the layout
         // Make category section autocomplete based on existing categories.
-            editCategory = (AutoCompleteTextView) findViewById(R.id.add_item_category);
+        editCategory = (AutoCompleteTextView) findViewById(R.id.add_item_category);
 
 
         //Pull from database categories into an arraylist.

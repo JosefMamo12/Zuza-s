@@ -40,7 +40,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.534"
+            app:layout_constraintHorizontal_bias="0.581"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.242" />
@@ -54,7 +54,7 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.465"
+            app:layout_constraintHorizontal_bias="0.545"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/menuItemName"
             app:layout_constraintVertical_bias="0.483" />
@@ -63,7 +63,7 @@
             android:id="@+id/menuItemsPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="280dp"
+            android:layout_marginEnd="288dp"
             android:text="9.99"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -71,12 +71,15 @@
             app:layout_constraintTop_toBottomOf="@+id/menuItemName"
             app:layout_constraintVertical_bias="0.483" />
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="264dp"
-            android:layout_marginBottom="52dp"
+            android:layout_marginEnd="240dp"
+            android:layout_marginBottom="40dp"
+            android:backgroundTint="@color/cardview_shadow_end_color"
             android:text="הוסף לעגלה"
+            android:textColor="#013220"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
