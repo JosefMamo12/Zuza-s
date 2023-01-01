@@ -17,16 +17,23 @@
         />
 
     <ScrollView
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="117dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="100dp">
+        android:layout_marginBottom="140dp">
 
 
     </ScrollView>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="בצע הזמנה"
+        app:layout_constraintBaseline_toTopOf="@id/include"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
-
+        />
     <include
         android:id="@+id/include"
         layout="@layout/navigation_bar"
