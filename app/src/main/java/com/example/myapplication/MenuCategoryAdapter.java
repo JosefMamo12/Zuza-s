@@ -113,11 +113,12 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
                     {
                         Map<String,String> td=(HashMap<String, String>)child.getValue();
                         assert td != null;
+                        String id = td.get("id");
                         String price = td.get("price");
                         String name = td.get("name");
                         String desc = td.get("desc");
                         String url = td.get("imageUrl");
-                        MenuItemModel singleItem = new MenuItemModel(name, desc, price);
+                        MenuItemModel singleItem = new MenuItemModel(id,name, desc, price,url);
                         items.add(singleItem);
 
                     }

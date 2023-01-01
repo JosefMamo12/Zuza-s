@@ -3,11 +3,9 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,12 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
     private ImageView logInImg, logOutImg, accountImg, homePageImg, shoppingCart, mangerReport;
     private Button addItemBtn, editItemBtn;
-    boolean isAdmin;
     ArrayList<MenuItemModel> items = new ArrayList<>();
     MenuItemAdapter menuItemAdapter;
     MenuCategoryAdapter menuCategoryAdapter;
@@ -84,9 +80,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         // {this} is given twice as argument, as this class both is an activity and also
         // implements the interface updateMenuRecyclerView.
         menuCategoryAdapter = new MenuCategoryAdapter(categories, this, this);
-        recyclerViewCategories.setLayoutManager(new
-
-                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCategories.setAdapter(menuCategoryAdapter);
 
         // Initialize items and bind them to a recycle view.
@@ -114,6 +108,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
+                assert user != null;
                 if (user.isAdmin()) {
                     addItemBtn.setVisibility(View.VISIBLE);
                     editItemBtn.setVisibility(View.VISIBLE);
