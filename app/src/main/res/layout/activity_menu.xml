@@ -63,7 +63,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText"
                 app:layout_constraintVertical_bias="0"
-                tools:listitem="@layout/menu_single_item_layout"/>
+                tools:listitem="@layout/menu_category_item"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_2"
