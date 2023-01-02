@@ -61,6 +61,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                     if (!categories.contains(md))
                         categories.add(md);
                 }
+                menuCategoryAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -87,7 +88,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         items = new ArrayList<>();
         recyclerViewItems = findViewById(R.id.rv_2);
 
-        menuItemAdapter = new MenuItemAdapter(items);
+        menuItemAdapter = new MenuItemAdapter(items, this);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewItems.setAdapter(menuItemAdapter);
     }
@@ -108,8 +109,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                assert user != null;
-                if (user.isAdmin()) {
+//                assert user != null; // Causes to crash sometimes after registration
+                if (user != null && user.isAdmin()) {
                     addItemBtn.setVisibility(View.VISIBLE);
                     editItemBtn.setVisibility(View.VISIBLE);
                     shoppingCart.setVisibility(View.INVISIBLE);
@@ -176,6 +177,17 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                 checkIfConnected();
                 startActivity(new Intent(this, HomePage.class));
                 break;
+            case R.id.shop_cart:
+                if (mAuth.getCurrentUser() == null)
+                {
+                    Toast.makeText(this, "Please login to make a cart", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    finish();
+                    startActivity(new Intent(this, CartPage.class));
+                }
+                break;
             case R.id.logInImg:
                 startActivity(new Intent(this, Login.class));
                 break;
@@ -193,14 +205,13 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                 break;
 
         }
-
     }
 
     /**
      * Notify recycler that the category changed, load new category.
      */
     public void callback(int position, ArrayList<MenuItemModel> items) {
-        menuItemAdapter = new MenuItemAdapter(items);
+        menuItemAdapter = new MenuItemAdapter(items, this);
         menuItemAdapter.notifyItemInserted(position);
         recyclerViewItems.setAdapter(menuItemAdapter);
     }

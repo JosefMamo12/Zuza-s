@@ -301,6 +301,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void retrievePhotoFromStorage(String name) {
+        if (name == null || name.isEmpty())
+            return;
+
         storageReference.child(name).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

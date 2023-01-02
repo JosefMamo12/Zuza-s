@@ -158,7 +158,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                     @Override
                     public void onCancel() {
-                        // App code
+
                     }
 
                     @Override

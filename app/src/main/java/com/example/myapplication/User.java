@@ -9,8 +9,6 @@ public class User {
     private String fullName, age, email, uid, url;
     private boolean isAdmin;
 
-
-
 /*
  *Different constructors for a different scenarios.
  */
@@ -29,7 +27,6 @@ public class User {
         this.age = age;
         this.email = email;
         this.isAdmin = false;
-
     }
 
     /*
