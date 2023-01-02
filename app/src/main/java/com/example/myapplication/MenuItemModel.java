@@ -77,8 +77,8 @@ public class MenuItemModel {
     @Override
     public String toString() {
         return "MenuItemModel{" +
-                "id=' " + id + '\'' +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 ", price='" + price + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +

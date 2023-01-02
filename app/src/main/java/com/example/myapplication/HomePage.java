@@ -72,7 +72,10 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        // Download and cache all the data from menu items. (Shouldn't weigh too much)
         FirebaseDatabase.getInstance().getReference("menuItems").keepSynced(true);
+
 
         navBarInitializer();
         sliderIntializer();
@@ -109,6 +112,7 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
+                if (user == null) return;
                 if (user.getUid().equals(uid) && user.isAdmin()) {
                     managerReport.setVisibility(View.VISIBLE);
                     shoppingCart.setVisibility(View.INVISIBLE);

@@ -61,6 +61,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                     if (!categories.contains(md))
                         categories.add(md);
                 }
+                menuCategoryAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -87,7 +88,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         items = new ArrayList<>();
         recyclerViewItems = findViewById(R.id.rv_2);
 
-        menuItemAdapter = new MenuItemAdapter(items);
+        menuItemAdapter = new MenuItemAdapter(items, this);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewItems.setAdapter(menuItemAdapter);
     }
@@ -200,7 +201,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
      * Notify recycler that the category changed, load new category.
      */
     public void callback(int position, ArrayList<MenuItemModel> items) {
-        menuItemAdapter = new MenuItemAdapter(items);
+        menuItemAdapter = new MenuItemAdapter(items, this);
         menuItemAdapter.notifyItemInserted(position);
         recyclerViewItems.setAdapter(menuItemAdapter);
     }
