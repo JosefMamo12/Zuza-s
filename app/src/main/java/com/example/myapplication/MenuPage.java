@@ -74,7 +74,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         // Dummy Node
         // Category viewer
-        categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי"));
+//        categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי"));
 
         recyclerViewCategories = findViewById(R.id.rv_1);
 
