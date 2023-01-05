@@ -235,6 +235,17 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             case R.id.add_profile_picture:
                 selectImage();
                 break;
+            case R.id.shop_cart:
+                if (mAuth.getCurrentUser() == null)
+                {
+                    Toast.makeText(this, "Please login to make a cart", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    finish();
+                    startActivity(new Intent(this, CartPage.class));
+                }
+                break;
         }
 
     }

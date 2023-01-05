@@ -72,7 +72,7 @@ public class MenuCategoryAdapter extends RecyclerView.Adapter<MenuCategoryAdapte
         // Once viewed, remove "press me" button.
         if (firstViewed)
         {
-            categories.remove(0);
+//            categories.remove(0); no longer needed if dummy category isn't added
             updateData(currentItem, pos);
             updateMenuRecyclerView.callback(pos, items);
             firstViewed = false;
