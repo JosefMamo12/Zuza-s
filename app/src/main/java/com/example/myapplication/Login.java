@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -46,6 +47,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 /**
  * Login class
  * Content layout - activity_login
@@ -55,6 +62,8 @@ import java.util.Arrays;
  */
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
+    String serverUrl = "http://192.168.0.102:8080";
+
     private static final int RC_SIGN_IN = 1000;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
@@ -63,11 +72,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private ImageView fbBtn, twiterBtn, googleBtn;
     private Button login;
     private ProgressBar progressBar;
+    LoginAPI api;
 
     CallbackManager callbackManager;
     private GoogleSignInClient googleSignInClient;
     LoginManager loginManager;
 
+    Retrofit retrofit;
 
     @Override
     protected void onStart() {
@@ -83,7 +94,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        LoginIntializer();
+        LoginInitializer();
+        retrofit = new Retrofit.Builder().baseUrl(serverUrl).
+                addConverterFactory(GsonConverterFactory.create()).build();
+        api = retrofit.create(LoginAPI.class);
     }
 
 
@@ -107,14 +121,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 twitterSignIn();
                 break;
             case R.id.login:
-                signInWithMail();
+                signInWithMailUsingApi();
                 break;
 
         }
 
     }
 
-    private void LoginIntializer() {
+    private void LoginInitializer() {
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         callbackManager = CallbackManager.Factory.create();
@@ -247,6 +261,80 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 1000);
+    }
+
+    public void signInWithMailUsingApi() {
+        String mail = editTextUserName.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+        if (mail.isEmpty()) {
+            editTextUserName.setError("Email is required");
+            editTextUserName.requestFocus();
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
+            editTextUserName.setError("Please provide valid email");
+            editTextUserName.requestFocus();
+            return;
+        }
+        if (password.length() < 6) {
+            editTextPassword.setError("Min password length should be 6 characters!");
+            editTextPassword.requestFocus();
+            return;
+        }
+        LoginRequest loginRequest = new LoginRequest(mail, password);
+        Call<LoginResponse> call = api.login(loginRequest);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful()) {
+                    String token = response.body().getToken();
+                    saveToken(token);
+                    receiveProtectedResponse(api);
+
+                } else {
+                    Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.w("MyTag", "RequestFailed", t);
+                Toast.makeText(Login.this, "An error occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    private void receiveProtectedResponse(LoginAPI api) {
+        String token = getToken();
+        Call<ProtectedResponse> call = api.getProtectedResource("Bearer" + token);
+        call.enqueue(new Callback<ProtectedResponse>() {
+            @Override
+            public void onResponse(Call<ProtectedResponse> call, Response<ProtectedResponse> response) {
+                if (response.isSuccessful()) {
+                    String data = response.body().getData();
+                } else {
+                    Toast.makeText(Login.this, "An error occurred", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProtectedResponse> call, Throwable t) {
+                Toast.makeText(Login.this, "An error occurred", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private String getToken() {
+        SharedPreferences preferences = getSharedPreferences("my-preferences", MODE_PRIVATE);
+        return preferences.getString("token", null);
+    }
+
+    private void saveToken(String token) {
+        SharedPreferences preferences = getSharedPreferences("my-preferences", MODE_PRIVATE);
+        preferences.edit().putString("token", token).apply();
     }
 
     public void signInWithMail() {

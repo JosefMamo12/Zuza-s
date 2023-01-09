@@ -203,9 +203,6 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
             case R.id.accountImg:
                 startActivity(new Intent(getApplicationContext(), Profile.class));
                 break;
-            case R.id.shop_cart:
-                startActivity(new Intent(getApplicationContext(), ShoppingCartView.class));
-                break;
         }
     }
 

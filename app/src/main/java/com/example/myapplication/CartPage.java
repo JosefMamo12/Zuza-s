@@ -35,9 +35,8 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
     private ImageView logInImg;
     private ImageView accountImg;
-    private ImageView menuFoodImg;
+    private ImageView shoppingCart;
     private ImageView mangerReport;
-    private TextView amount;
 
     FirebaseAuth mAuth;
     FirebaseDatabase database;
@@ -68,18 +67,10 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         items = new ArrayList<>();
         itemsCount = new HashMap<>();
 
-        amount = findViewById(R.id.CartAmount);
-        amount.setEnabled(false);
-        amount.setClickable(false);
-
         Context temp_ctx = this;
         updateData(temp_ctx);
     }
-    private void updateCartSum(double sum)
-    {
-        String price = "לתשלום: " + sum;
-        amount.setText(price);
-    }
+
     private void updateData(Context temp_ctx)
     {
         database.getReference().child("Carts").orderByChild("userID").equalTo(mAuth.getUid())
@@ -94,8 +85,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
                             if (c != null)
                             {
-                                String price = "לתשלום: " + c.getPrice();
-                                amount.setText(price);
                                 for (MenuItemModel item : c.getItems())
                                 {
                                     if (itemsCount.containsKey(item.getName()))
@@ -109,9 +98,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                                     }
                                 }
                             }
-
-
-
                             cartItemsRecyc = findViewById(R.id.cart_items);
                             cartAdapter = new CartPageAdapter(items, itemsCount, temp_ctx);
                             cartItemsRecyc.setLayoutManager(new LinearLayoutManager(temp_ctx, LinearLayoutManager.VERTICAL, false));
@@ -129,6 +115,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
     private void checkIfAdminConnected() {
         if (mAuth.getCurrentUser() == null) {
+            shoppingCart.setVisibility(View.VISIBLE);
             mangerReport.setVisibility(View.INVISIBLE);
             return;
         }
@@ -141,9 +128,11 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                 User user = snapshot.getValue(User.class);
                 assert user != null;
                 if (user.isAdmin()) {
+                    shoppingCart.setVisibility(View.INVISIBLE);
                     mangerReport.setVisibility(View.VISIBLE);
 
                 } else {
+                    shoppingCart.setVisibility(View.VISIBLE);
                     mangerReport.setVisibility(View.INVISIBLE);
                 }
             }
@@ -160,7 +149,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         mAuth = FirebaseAuth.getInstance();
         /* Image views of navBar*/
         mangerReport = (ImageView) findViewById(R.id.report);
-        menuFoodImg = (ImageView) findViewById(R.id.menuFoodImg);
+        shoppingCart = (ImageView) findViewById(R.id.shop_cart);
         logInImg = (ImageView) findViewById(R.id.logInImg);
         accountImg = (ImageView) findViewById(R.id.accountImg);
         ImageView logOutImg = (ImageView) findViewById(R.id.logOutImg);
@@ -170,7 +159,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         accountImg.setOnClickListener(this);
         logOutImg.setOnClickListener(this);
         homePageImg.setOnClickListener(this);
-        menuFoodImg.setOnClickListener(this);
+        shoppingCart.setOnClickListener(this);
         mangerReport.setOnClickListener(this);
 
     }
@@ -190,8 +179,11 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.menuFoodImg:
-                startActivity(new Intent(this, MenuPage.class));
+            case R.id.menu_add_item_manager:
+                startActivity(new Intent(this, MenuItemAddition.class));
+                break;
+            case R.id.menu_edit_item_manager:
+                startActivity(new Intent(this, MenuItemEdit.class));
                 break;
             case R.id.homeImg:
                 finish();
@@ -206,7 +198,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                     mAuth.signOut();
                     checkIfAdminConnected();
                     checkIfConnected();
-                    finish();
                 } else {
                     Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
                 }
@@ -236,7 +227,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     static class CartPageAdapter extends RecyclerView.Adapter<CartPageAdapter.CartItemHolder>
     {
         Context c;
-        CartPage cartPage;
         HashMap<String, Integer> itemsCount;
         ArrayList<MenuItemModel> items;
 
@@ -245,7 +235,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
             this.items = items;
             this.itemsCount = itemsCount;
             this.c = c;
-            cartPage = (CartPage) c;
         }
 
         @NonNull
@@ -285,43 +274,33 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                     for (DataSnapshot ds : snapshot.getChildren())
                     {
                         Cart current = ds.getValue(Cart.class);
-
-                        /*Search for cart matching our user id*/
                         if (current != null && Objects.equals(current.userID, id))
                         {
-                            /*Remove item from cart and update*/
                             current.getItems().remove(currentItem);
                             double price = Double.parseDouble(currentItem.getPrice());
-                            price = current.getPrice() - price;
-                            current.setPrice(price);
+                            current.setPrice(current.getPrice() - price);
                             current.setCount(current.getCount() - 1);
                             String key = ds.getKey();
 
-                            /*If cart still has items, update it*/
                             if (current.getCount() > 0)
                             {
                                 FirebaseDatabase.getInstance().getReference().child("Carts").
                                         child(key)
                                         .setValue(current);
-                                cartPage.updateCartSum(price);
                             }
-                            /*If no items, remove cart entirely*/
                             else
                             {
                                 FirebaseDatabase.getInstance().getReference().child("Carts").
                                         child(key)
                                         .removeValue();
-                                cartPage.updateCartSum(0);
                             }
 
-                            /*If item was removed entirely, remove it from local memory and from binders*/
                             if (amount == 1)
                             {
                                 itemsCount.remove(currentItem.getName());
                                 items.remove(currentItem);
                                 notifyItemRemoved(pos);
                             }
-                            /*Only one of the item was removed, and there are still some left*/
                             else
                             {
                                 itemsCount.put(currentItem.getName(), amount - 1);
@@ -345,37 +324,19 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                         Cart current = ds.getValue(Cart.class);
                         if (current != null && Objects.equals(current.userID, id))
                         {
-                            double price = 0;
-
-                            /*Remove all occurrences of selected item*/
                             while (current.getItems().contains(currentItem))
                             {
                                 current.getItems().remove(currentItem);
-                                price = Double.parseDouble(currentItem.getPrice());
-                                price = current.getPrice() - price;
-                                current.setPrice(price);
+                                double price = Double.parseDouble(currentItem.getPrice());
+                                current.setPrice(current.getPrice() - price);
                                 current.setCount(current.getCount() - 1);
                             }
 
-                            /*With current key, update cart*/
                             String key = ds.getKey();
-                            if (current.getCount() > 0)
-                            {
-                                FirebaseDatabase.getInstance().getReference().child("Carts").
-                                        child(key)
-                                        .setValue(current);
-                                cartPage.updateCartSum(price);
-                            }
-                            /*Or delete cart if all items are deleted*/
-                            else
-                            {
-                                FirebaseDatabase.getInstance().getReference().child("Carts").
-                                        child(key)
-                                        .removeValue();
-                                cartPage.updateCartSum(0);
-                            }
+                            FirebaseDatabase.getInstance().getReference().child("Carts").
+                                    child(key)
+                                    .setValue(current);
 
-                            /*Notify item deleted to binders*/
                             itemsCount.remove(currentItem.getName());
                             items.remove(currentItem);
                             notifyItemRemoved(pos);
