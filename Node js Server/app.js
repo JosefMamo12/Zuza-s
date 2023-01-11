@@ -28,16 +28,7 @@ firebaseAdmin.initializeApp({
 });
 
 //For web applications
-const firebaseConfig = {
-  apiKey: "AIzaSyCXKNWNgU3hbw3g8KDKh0g5PrujkOqcBLE",
-  authDomain: "myapplicaition.firebaseapp.com",
-  databaseURL: "https://myapplicaition-default-rtdb.firebaseio.com",
-  projectId: "myapplicaition",
-  storageBucket: "myapplicaition.appspot.com",
-  messagingSenderId: "1012911143977",
-  appId: "1:1012911143977:web:c92dcb2783247782023038",
-  measurementId: "G-Z2MKPR54PZ"
-};
+import firebaseConfig from './firebaseConfig.json'assert{type:'json'};
 
 firebase.initializeApp(firebaseConfig);
 

@@ -32,6 +32,7 @@ google-services.json
 # Android Profiling
 *.hprof
 
+babelrc
 # Logs
 logs
 *.log
@@ -178,3 +179,4 @@ dist
 .externalNativeBuild
 
 serviceAccountCredentials.json
+firebaseConfig.json
