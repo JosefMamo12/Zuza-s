@@ -67,7 +67,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
-    String serverUrl = "http://10.0.2.2:8080";
 
     private static final int RC_SIGN_IN = 1000;
     private FirebaseAuth mAuth;
@@ -100,7 +99,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         LoginInitializer();
-        retrofit = new Retrofit.Builder().baseUrl(serverUrl).
+        retrofit = new Retrofit.Builder().baseUrl(ServerAPI.baseUrl).
                 addConverterFactory(GsonConverterFactory.create()).build();
         api = retrofit.create(ServerAPI.class);
         Enumeration<NetworkInterface> interfaces = null;
@@ -335,6 +334,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
 //                    receiveProtectedResponse();
                 } else {
+                    Log.w("Login", "Invalid email or password");
                     Toast.makeText(Login.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
             }

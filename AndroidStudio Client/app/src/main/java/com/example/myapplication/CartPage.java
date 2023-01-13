@@ -43,6 +43,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     RecyclerView cartItemsRecyc;
     CartPageAdapter cartAdapter;
 
+
     ArrayList<MenuItemModel> items;
     HashMap<String, Integer> itemsCount;
 
@@ -63,7 +64,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         navBarInitializer();
         checkIfConnected();
         checkIfAdminConnected();
-
         items = new ArrayList<>();
         itemsCount = new HashMap<>();
 
@@ -226,6 +226,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
     static class CartPageAdapter extends RecyclerView.Adapter<CartPageAdapter.CartItemHolder>
     {
+        double totalPrice = 0;
         Context c;
         HashMap<String, Integer> itemsCount;
         ArrayList<MenuItemModel> items;
@@ -278,6 +279,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                         {
                             current.getItems().remove(currentItem);
                             double price = Double.parseDouble(currentItem.getPrice());
+                            totalPrice += price;
                             current.setPrice(current.getPrice() - price);
                             current.setCount(current.getCount() - 1);
                             String key = ds.getKey();

@@ -80,6 +80,17 @@ function writeUserData (userId, email, age, fullName){
     uid: userId
   });
 }
+app.post('/forgotPassword', async (req, res) => {
+
+  console.log("forgotPassword request");
+  const {email} = req.body;
+  try{
+    await firebase.auth().sendPasswordResetEmail(email);
+    res.status(200);
+  }catch(error){
+    res.status(401).send({error: 'Forgot Password Failed'})
+  }
+});
 
 // // Set up an Express.js route to handle requests to a protected route or resource
 // app.get('/protected', async (req, res) => {

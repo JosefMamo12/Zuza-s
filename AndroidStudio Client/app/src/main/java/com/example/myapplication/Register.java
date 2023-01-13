@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * this class feed the firebase authentication and the realtime Users database.
  */
 public class Register extends AppCompatActivity implements View.OnClickListener {
-    String serverUrl = "http://10.0.2.2:8080";
+
     private FirebaseAuth mAuth;
     private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
     private ProgressBar progressBar;
@@ -60,7 +60,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         editTextPassword = findViewById(R.id.password);
 
         progressBar = findViewById(R.id.progressBar);
-        retrofit = new Retrofit.Builder().baseUrl(serverUrl).addConverterFactory(GsonConverterFactory.create()).build();
+        retrofit = new Retrofit.Builder().baseUrl(ServerAPI.baseUrl).addConverterFactory(GsonConverterFactory.create()).build();
         api = retrofit.create(ServerAPI.class);
 
     }

@@ -11,8 +11,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +36,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     RecyclerView recyclerViewCategories, recyclerViewItems;
     FirebaseDatabase database;
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -45,6 +48,9 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+//       ActivityMenuBinding activityMenuBinding =DataBindingUtil.setContentView(this, R.layout.activity_menu);
+//        ActivityMenuBinding activityMenuBinding = ActivityMenuBinding.inflate(getLayoutInflater());
+
         database = FirebaseDatabase.getInstance();
         addItemBtn = findViewById(R.id.menu_add_item_manager);
         editItemBtn = findViewById(R.id.menu_edit_item_manager);
@@ -101,6 +107,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             editItemBtn.setVisibility(View.INVISIBLE);
             shoppingCart.setVisibility(View.VISIBLE);
             mangerReport.setVisibility(View.INVISIBLE);
+            findViewById(R.id.addToCart).setVisibility(View.INVISIBLE);
             return;
         }
         String uid = mAuth.getCurrentUser().getUid();
@@ -116,8 +123,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                     editItemBtn.setVisibility(View.VISIBLE);
                     shoppingCart.setVisibility(View.INVISIBLE);
                     mangerReport.setVisibility(View.VISIBLE);
-
                 } else {
+
                     addItemBtn.setVisibility(View.INVISIBLE);
                     editItemBtn.setVisibility(View.INVISIBLE);
                     shoppingCart.setVisibility(View.VISIBLE);
