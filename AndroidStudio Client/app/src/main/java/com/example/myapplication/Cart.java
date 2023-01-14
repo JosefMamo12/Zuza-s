@@ -8,7 +8,7 @@ public class Cart
     int count;
     double price;
     String userID;
-    double totalPrice;
+//    double totalPrice;
 
     public Cart(){}
 
@@ -20,13 +20,13 @@ public class Cart
         this.userID = uid;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+//    public double getTotalPrice() {
+//        return totalPrice;
+//    }
+//
+//    public void setTotalPrice(double totalPrice) {
+//        this.totalPrice = totalPrice;
+//    }
 
     @Override
     public String toString() {

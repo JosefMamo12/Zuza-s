@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Orderpage">
+    tools:context=".OrdersPage">
 
     <ImageView
         android:id="@+id/cart_zuza_logo"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cart_zuza_logo"
         app:layout_constraintBottom_toTopOf="@+id/include"
-        tools:context=".OrderPage">
+        tools:context=".OrdersPage">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
