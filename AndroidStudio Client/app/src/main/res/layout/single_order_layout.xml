@@ -23,7 +23,7 @@
         app:layout_constraintWidth_percent=".9">
 
         <TextView
-            android:id="@+id/CartItemName"
+            android:id="@+id/OrderName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="example name"
@@ -31,57 +31,56 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.458"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/order_complete"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.242" />
+            app:layout_constraintVertical_bias="0.151" />
 
         <TextView
-            android:id="@+id/CartItemsAmount"
+            android:id="@+id/OrderItemsAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="example details"
+
+            android:layout_marginBottom="60dp"
+            android:text="0 פריטים"
             android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/show_order"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.424"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CartItemName"
-            app:layout_constraintVertical_bias="0.483" />
+            tools:layout_editor_absoluteX="214dp" />
 
         <TextView
-            android:id="@+id/CartItemsPrice"
+            android:id="@+id/TotalOrderPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="60dp"
             android:text="9.99"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/CartDelAll"
-            app:layout_constraintTop_toBottomOf="@+id/CartDelAll" />
+            app:layout_constraintStart_toEndOf="@+id/OrderItemsAmount" />
 
         <Button
-            android:id="@+id/CartDelOne"
+            android:id="@+id/show_order"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="4dp"
             android:backgroundTint="@color/cardview_shadow_end_color"
-            android:text="@string/cart_del_one"
+            android:text="@string/order_details"
             android:textColor="#013220"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
-            android:id="@+id/CartDelAll"
+            android:id="@+id/order_complete"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginBottom="4dp"
             android:backgroundTint="@color/cardview_shadow_end_color"
-            android:text="@string/cart_del_all"
+            android:text="@string/complete_order"
             android:textColor="#013220"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

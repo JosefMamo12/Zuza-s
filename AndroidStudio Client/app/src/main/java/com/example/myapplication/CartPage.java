@@ -179,7 +179,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.menu_add_item_manager:
+            case R.id.make_order:
                 startActivity(new Intent(this, MenuItemAddition.class));
                 break;
             case R.id.menu_edit_item_manager:

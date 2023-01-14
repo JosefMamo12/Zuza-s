@@ -1,4 +1,4 @@
 package com.example.myapplication;
 
-public class Orders {
+public class Order {
 }

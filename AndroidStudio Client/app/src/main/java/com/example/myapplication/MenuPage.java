@@ -83,7 +83,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         // Category viewer
 //        categories.add(new MenuCategoryModel(R.drawable.z_logo, "לחץ עליי"));
 
-        recyclerViewCategories = findViewById(R.id.rv_1);
+        recyclerViewCategories = findViewById(R.id.rv_categories);
 
         // {this} is given twice as argument, as this class both is an activity and also
         // implements the interface updateMenuRecyclerView.
@@ -93,7 +93,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
 
         // Initialize items and bind them to a recycle view.
         items = new ArrayList<>();
-        recyclerViewItems = findViewById(R.id.rv_2);
+        recyclerViewItems = findViewById(R.id.rv_items);
 
         menuItemAdapter = new MenuItemAdapter(items, this);
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));

@@ -78,7 +78,7 @@
             android:layout_marginEnd="240dp"
             android:layout_marginBottom="40dp"
             android:backgroundTint="@color/cardview_shadow_end_color"
-            android:text="הוסף לעגלה"
+            android:text="@string/add_to_cart"
             android:textColor="#013220"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             app:layout_constraintBottom_toBottomOf="parent"

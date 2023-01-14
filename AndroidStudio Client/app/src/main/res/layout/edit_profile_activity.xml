@@ -28,19 +28,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Full Name"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/full_name"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edit_profile_f_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="30dp"
-                android:hint="New Full Name" />
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:hint="@string/new_full_name" />
         </LinearLayout>
 
         <View
@@ -60,19 +61,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Age"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/age"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edit_profile_age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="30dp"
-                android:hint="New Age" />
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:hint="@string/new_age" />
         </LinearLayout>
 
         <View
@@ -92,19 +94,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="Phone Number"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/phone_number"
                 android:textColor="@color/black"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edit_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="30dp"
-                android:hint="+972..." />
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:hint="@string/phone_hint" />
         </LinearLayout>
 
         <View
@@ -126,19 +129,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/change_profile_picture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="20dp"
+
                 android:background="@drawable/big_btn"
                 android:padding="10dp"
                 android:paddingTop="30dp"
-                android:text="Change Profile Picture"
+                android:text="@string/change_profile_picture"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -146,12 +148,12 @@
             android:id="@+id/update_changes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
+            android:layout_gravity="center"
             android:layout_marginTop="15dp"
             android:background="@drawable/big_btn"
             android:padding="10dp"
             android:paddingTop="30dp"
-            android:text="Update Changes"
+            android:text="@string/update_changes"
             android:textSize="18sp" />
 
     </LinearLayout>
