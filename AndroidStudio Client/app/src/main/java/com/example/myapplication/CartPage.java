@@ -223,7 +223,6 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
 
     // ADAPTER
-
     static class CartPageAdapter extends RecyclerView.Adapter<CartPageAdapter.CartItemHolder>
     {
         double totalPrice = 0;

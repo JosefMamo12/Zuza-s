@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@color/Black_Olive"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/zuza_logo"
         android:src="@drawable/zuzalogo"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,9 +19,10 @@
         android:id="@+id/CartAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="100dp"
         android:inputType="none"
+        android:minHeight="48dp"
         android:text="לתשלום: 0"
         app:layout_constraintBottom_toBottomOf="@+id/include"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,14 +30,27 @@
 
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/make_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="100dp"
-        android:text="בצע הזמנה"
+        android:text="@string/make_order"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/CartAmount"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/view_user_orders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="100dp"
+        android:text="@string/previous_orders"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/CartAmount" />
 
     <ScrollView
 
@@ -82,5 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
