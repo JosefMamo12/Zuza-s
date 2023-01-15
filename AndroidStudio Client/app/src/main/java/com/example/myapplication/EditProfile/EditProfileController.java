@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class EditProfileController {
     private static final EditProfileModel profileModel = new EditProfileModel();
 
-    public static void beforeUpdating(MyListener listener, HashMap<Integer, String> myHash) {
+    public static void beforeUpdating(EditProfileCallBack listener, HashMap<Integer, String> myHash) {
         profileModel.getData(listener, myHash);
     }
 

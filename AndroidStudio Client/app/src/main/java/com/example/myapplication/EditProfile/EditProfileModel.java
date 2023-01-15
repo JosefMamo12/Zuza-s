@@ -83,7 +83,7 @@ public class EditProfileModel {
     }
 
 
-    public void getData(MyListener listener, HashMap<Integer, String> myHash) {
+    public void getData(EditProfileCallBack listener, HashMap<Integer, String> myHash) {
         uid = mAuth.getCurrentUser().getUid();
         DatabaseReference uidRef = userRef.child(uid);
         uidRef.addValueEventListener(new ValueEventListener() {

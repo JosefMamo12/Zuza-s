@@ -107,7 +107,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             editItemBtn.setVisibility(View.INVISIBLE);
             shoppingCart.setVisibility(View.VISIBLE);
             mangerReport.setVisibility(View.INVISIBLE);
-            findViewById(R.id.addToCart).setVisibility(View.INVISIBLE);
+//            findViewById(R.id.addToCart).setVisibility(View.INVISIBLE);
             return;
         }
         String uid = mAuth.getCurrentUser().getUid();

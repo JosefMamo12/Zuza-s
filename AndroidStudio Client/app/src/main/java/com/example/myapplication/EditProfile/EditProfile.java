@@ -76,7 +76,7 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         navBarInitializer();
         editProfileInitializer();
         checkIfAdminConnected();
-        MyListener listener = new MyListener() {
+        EditProfileCallBack listener = new EditProfileCallBack() {
             @Override
             public void onDataLoaded() {
                 fillViewOptions();

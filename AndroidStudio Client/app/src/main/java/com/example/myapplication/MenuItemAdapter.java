@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -25,12 +31,11 @@ import java.util.ArrayList;
  * Class to pull items from database and display them into a view holder.
  * Only one category is loaded each time.
  */
-public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuItemHolder>
-{
+public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuItemHolder> {
     public ArrayList<MenuItemModel> menuItemModels;
     Context c;
-    public MenuItemAdapter(ArrayList<MenuItemModel> menuItemModels, Context c)
-    {
+
+    public MenuItemAdapter(ArrayList<MenuItemModel> menuItemModels, Context c) {
         this.menuItemModels = menuItemModels;
         this.c = c;
     }
@@ -38,8 +43,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     /**
      * Class for a single item to load into the view holder.
      */
-    public static class MenuItemHolder extends RecyclerView.ViewHolder
-    {
+    public static class MenuItemHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView name;
         public TextView desc;
@@ -58,29 +62,29 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
 
     @NonNull
     @Override
-    public MenuItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public MenuItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Binds XML items to current activity. (Menu page)
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_single_item_layout, parent, false);
         return new MenuItemHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MenuItemHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull MenuItemHolder holder, int position) {
         // Get item parameters.
         MenuItemModel currentItem = menuItemModels.get(position);
-        View addCart =  holder.constraintLayout.findViewById(R.id.addToCart);
-        addCart.setOnClickListener(new View.OnClickListener()
-        {
+        View addCart = holder.constraintLayout.findViewById(R.id.addToCart);
+        addCart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 updateCart(currentItem);
             }
         });
         // Can be changed to get an image based on item's name
-        holder.imageView.setImageResource(R.drawable.z_logo);
+        if (currentItem.getImageUrl() != null)
+            retrievePhotoFromStorage(currentItem.getImageUrl(),holder.imageView);
+        else {
+            holder.imageView.setImageResource(R.drawable.z_logo);
+        }
         holder.name.setText(currentItem.getName());
         holder.desc.setText(currentItem.getDesc());
         holder.price.setText(currentItem.getPrice());
@@ -88,16 +92,14 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
 
     }
 
-    private void updateCart(MenuItemModel item)
-    {
+    private void updateCart(MenuItemModel item) {
         if (item == null)
             return;
 
         final String userID = FirebaseAuth.getInstance().getUid();
 
 
-        if (userID == null)
-        {
+        if (userID == null) {
             Toast.makeText(this.c, "Please login to order.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -110,27 +112,23 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
         {
             cart.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot)
-                {
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String key = null;
                     Cart data = null;
-                    for (DataSnapshot d : snapshot.getChildren())
-                    {
+                    for (DataSnapshot d : snapshot.getChildren()) {
                         data = d.getValue(Cart.class);
                         key = d.getKey();
                         break;
                     }
 
-                    if (data == null || key == null)
-                    {
+                    if (data == null || key == null) {
                         initCart(item, cart, userID);
                         return;
                     }
 
                     ArrayList<MenuItemModel> temp = data.getItems();
 
-                    if (temp == null)
-                    {
+                    if (temp == null) {
                         temp = new ArrayList<>();
                     }
                     temp.add(item);
@@ -148,14 +146,10 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
 
                 }
             });
-        }
-
-        catch (NullPointerException e) // No cart, make new one
+        } catch (NullPointerException e) // No cart, make new one
         {
             initCart(item, cart, userID);
-        }
-
-        catch (Exception e) // Unexpected error
+        } catch (Exception e) // Unexpected error
         {
             e.printStackTrace();
         }
@@ -165,8 +159,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
         Toast.makeText(this.c, message, Toast.LENGTH_SHORT).show();
     }
 
-    private void initCart(MenuItemModel item, Query cart, String userID)
-    {
+    private void initCart(MenuItemModel item, Query cart, String userID) {
         ArrayList<MenuItemModel> temp = new ArrayList<>();
         temp.add(item);
         double price = Double.parseDouble(item.getPrice());
@@ -175,6 +168,22 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
         cart.getRef().push().setValue(updated);
     }
 
+    private void retrievePhotoFromStorage(String name, ImageView imageView) {
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();
+        storageReference.child(name).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(imageView);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(c.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {

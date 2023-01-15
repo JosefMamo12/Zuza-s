@@ -1,6 +1,6 @@
 package com.example.myapplication.EditProfile;
 
-public interface MyListener {
+public interface EditProfileCallBack {
     void onDataLoaded();
 
     void onError(String message);
