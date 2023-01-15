@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +35,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     private ImageView logInImg;
     private ImageView accountImg;
     private ImageView shoppingCart;
-    private ImageView mangerReport;
+    private ImageView managerReport;
     private ImageView menuPage;
     private TextView totalPrice;
 
@@ -114,7 +113,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     private void checkIfAdminConnected() {
         if (mAuth.getCurrentUser() == null) {
             shoppingCart.setVisibility(View.VISIBLE);
-            mangerReport.setVisibility(View.INVISIBLE);
+            managerReport.setVisibility(View.INVISIBLE);
             return;
         }
         String uid = mAuth.getCurrentUser().getUid();
@@ -124,14 +123,15 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                assert user != null;
-                if (user.isAdmin()) {
-                    shoppingCart.setVisibility(View.INVISIBLE);
-                    mangerReport.setVisibility(View.VISIBLE);
+                if (user != null && user.isAdmin()) {
+                    if (user.isAdmin()) {
+                        shoppingCart.setVisibility(View.INVISIBLE);
+                        managerReport.setVisibility(View.VISIBLE);
 
-                } else {
-                    shoppingCart.setVisibility(View.VISIBLE);
-                    mangerReport.setVisibility(View.INVISIBLE);
+                    } else {
+                        shoppingCart.setVisibility(View.VISIBLE);
+                        managerReport.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -146,7 +146,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     public void navBarInitializer() {
         mAuth = FirebaseAuth.getInstance();
         /* Image views of navBar*/
-        mangerReport = findViewById(R.id.report);
+        managerReport = findViewById(R.id.report);
         shoppingCart = findViewById(R.id.shop_cart);
         logInImg = findViewById(R.id.logInImg);
         accountImg = findViewById(R.id.accountImg);
@@ -160,7 +160,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         logOutImg.setOnClickListener(this);
         homePageImg.setOnClickListener(this);
         shoppingCart.setOnClickListener(this);
-        mangerReport.setOnClickListener(this);
+        managerReport.setOnClickListener(this);
         menuPage.setOnClickListener(this);
 
     }

@@ -7,9 +7,9 @@
     <string name="username">שם משתמש</string>
     <string name="password">סיסמה</string>
     <string name="register">הרשמה</string>
-    <string name="login">התחברות</string>
+    <string name="login">כניסה</string>
     <string name="forgot_password">שכחתי סיסמה</string>
-    <string name="sign_in">כניסה</string>
+    <string name="sign_in">התחברות</string>
     <string name="zuza_s">Zuza\'s</string>
     <string name="full_name">שם מלא</string>
     <string name="age">גיל</string>

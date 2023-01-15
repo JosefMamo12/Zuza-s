@@ -8,7 +8,7 @@ public class Order {
     private int count;
     private double price;
     private String userID;
-    private Date order_time;
+    private Date order_time; //https://firebase.google.com/docs/reference/android/com/google/firebase/Timestamp?hl=he
     private Date complete_time;
     private boolean complete;
 

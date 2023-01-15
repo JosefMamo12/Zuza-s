@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.example.myapplication.EditProfile.EditProfile;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,8 +47,9 @@ import java.util.UUID;
 public class Profile extends AppCompatActivity implements View.OnClickListener {
 
     private final int PICK_IMAGE_REQUEST = 22;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     private Uri filePath;
-
     private TextView fullName, age, email, editProfile;
     private ImageView logInImg;
     private ImageView accountImg;
@@ -62,14 +61,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private CircularImageView profilePic;
     private FirebaseDatabase userDatabase;
-    FirebaseStorage storage;
-    StorageReference storageReference;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.profile_activity);
+        setContentView(R.layout.activity_profile);
 
         navBarInitializer();
         profilePageInitializer();
@@ -94,13 +90,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                assert user != null;
-                if (user.isAdmin()) {
-                    managerReport.setVisibility(View.VISIBLE);
-                    shoppingCart.setVisibility(View.INVISIBLE);
-                } else {
-                    managerReport.setVisibility(View.INVISIBLE);
-                    shoppingCart.setVisibility(View.VISIBLE);
+                if (user != null && user.isAdmin()) {
+                    if (user.isAdmin()) {
+                        shoppingCart.setVisibility(View.INVISIBLE);
+                        managerReport.setVisibility(View.VISIBLE);
+
+                    } else {
+                        shoppingCart.setVisibility(View.VISIBLE);
+                        managerReport.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -121,22 +119,23 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                assert user != null;
-                if (user.getFullName() != null) {
-                    fullName.setText(user.getFullName());
-                }
-                if (user.getAge() != null) {
-                    age.setText(user.getAge());
-                }
-                if (user.getEmail() != null) {
-                    email.setText(user.getEmail());
-                }
-                if (user.getPhoneNumber() != null) {
-                    phoneNumber.setText(user.getPhoneNumber());
-                }
-                if (user.getUrl() != null) {
-                    findViewById(R.id.add_profile_picture).setVisibility(View.INVISIBLE);
-                    retrievePhotoFromStorage(user.getUrl());
+                if (user != null && user.isAdmin()) {
+                    if (user.getFullName() != null) {
+                        fullName.setText(user.getFullName());
+                    }
+                    if (user.getAge() != null) {
+                        age.setText(user.getAge());
+                    }
+                    if (user.getEmail() != null) {
+                        email.setText(user.getEmail());
+                    }
+                    if (user.getPhoneNumber() != null) {
+                        phoneNumber.setText(user.getPhoneNumber());
+                    }
+                    if (user.getUrl() != null) {
+                        findViewById(R.id.add_profile_picture).setVisibility(View.INVISIBLE);
+                        retrievePhotoFromStorage(user.getUrl());
+                    }
                 }
             }
 
@@ -236,12 +235,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 selectImage();
                 break;
             case R.id.shop_cart:
-                if (mAuth.getCurrentUser() == null)
-                {
+                if (mAuth.getCurrentUser() == null) {
                     Toast.makeText(this, "Please login to make a cart", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     finish();
                     startActivity(new Intent(this, CartPage.class));
                 }

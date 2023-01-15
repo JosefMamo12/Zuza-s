@@ -70,7 +70,7 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_profile_activity);
+        setContentView(R.layout.activity_profile_edit);
         myHash = new HashMap<>();
         firebaseStorage = FirebaseStorage.getInstance();
         navBarInitializer();
@@ -333,13 +333,15 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                assert user != null;
-                if (user.isAdmin()) {
-                    managerReport.setVisibility(View.VISIBLE);
-                    shoppingCart.setVisibility(View.INVISIBLE);
-                } else {
-                    managerReport.setVisibility(View.INVISIBLE);
-                    shoppingCart.setVisibility(View.VISIBLE);
+                if (user != null && user.isAdmin()) {
+                    if (user.isAdmin()) {
+                        shoppingCart.setVisibility(View.INVISIBLE);
+                        managerReport.setVisibility(View.VISIBLE);
+
+                    } else {
+                        shoppingCart.setVisibility(View.VISIBLE);
+                        managerReport.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
