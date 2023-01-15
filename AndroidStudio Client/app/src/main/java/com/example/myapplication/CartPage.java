@@ -1,4 +1,5 @@
 package com.example.myapplication;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -30,8 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class CartPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView
-{
+public class CartPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
 
     private ImageView logInImg;
     private ImageView accountImg;
@@ -57,8 +57,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
@@ -76,38 +75,31 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         updateData(temp_ctx);
     }
 
-    private void updateData(Context temp_ctx)
-    {
+    private void updateData(Context temp_ctx) {
         database.getReference().child("Carts").orderByChild("userID").equalTo(mAuth.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot)
-                    {
-                        for (DataSnapshot data : snapshot.getChildren())
-                        {
-                             cart = data.getValue(Cart.class);
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot data : snapshot.getChildren()) {
+                            cart = data.getValue(Cart.class);
 
-                            if (cart != null &&cart.getCount() > 0)
-                            {
-                                for (MenuItemModel item : cart.getItems())
-                                {
-                                    if (itemsCount.containsKey(item.getName()))
-                                    {
+                            if (cart != null) {
+                                for (MenuItemModel item : cart.getItems()) {
+                                    if (itemsCount.containsKey(item.getName())) {
+
                                         itemsCount.put(item.getName(), itemsCount.get(item.getName()) + 1);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         itemsCount.put(item.getName(), 1);
                                         items.add(item);
                                     }
                                 }
                             }
                             cartItemsRecyc = findViewById(R.id.cart_items);
-                            cartAdapter = new CartPageAdapter(items, itemsCount, temp_ctx, cart,totalPrice);
+                            cartAdapter = new CartPageAdapter(items, itemsCount, temp_ctx, cart, totalPrice);
                             cartItemsRecyc.setLayoutManager(new LinearLayoutManager(temp_ctx, LinearLayoutManager.VERTICAL, false));
                             cartItemsRecyc.setAdapter(cartAdapter);
-                            totalPrice.setText("תשלום: "+ cart.getPrice());
+                            totalPrice.setText("תשלום: " + cart.getPrice());
                             break;
                         }
                     }
@@ -188,11 +180,12 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.menu_add_item_manager:
-                startActivity(new Intent(this, MenuItemAddition.class));
+            case R.id.make_order:
+                //take all cart contents and make an order
+//                startActivity(new Intent(this, OrdersPage.class));
                 break;
-            case R.id.menu_edit_item_manager:
-                startActivity(new Intent(this, MenuItemEdit.class));
+            case R.id.view_user_orders:
+                startActivity(new Intent(this, OrdersPage.class));
                 break;
             case R.id.homeImg:
                 finish();
@@ -207,7 +200,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                     mAuth.signOut();
                     checkIfAdminConnected();
                     checkIfConnected();
-                    startActivity(new Intent(getApplicationContext(),HomePage.class));
+                    startActivity(new Intent(getApplicationContext(), HomePage.class));
                 } else {
                     Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
                 }
@@ -216,15 +209,15 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                 startActivity(new Intent(getApplicationContext(), Profile.class));
                 break;
             case R.id.menuFoodImg:
-                startActivity(new Intent(getApplicationContext(),MenuPage.class));
+                startActivity(new Intent(getApplicationContext(), MenuPage.class));
                 break;
         }
     }
 
-    @Override
-    public void callback(int position, ArrayList<MenuItemModel> items)
-    {
+
+    public void callback(int position, ArrayList<MenuItemModel> items) {
         cartAdapter = new CartPageAdapter(items, itemsCount, this, cart, totalPrice);
+
         cartAdapter.notifyItemInserted(position);
         cartItemsRecyc.setAdapter(cartAdapter);
     }
@@ -237,42 +230,43 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
     // ADAPTER
 
-    static class CartPageAdapter extends RecyclerView.Adapter<CartPageAdapter.CartItemHolder>
-    {
-        TextView text;
-        Cart cart;
+
+    static class CartPageAdapter extends RecyclerView.Adapter<CartPageAdapter.CartItemHolder> {
+        double totalPrice = 0;
         Context c;
         HashMap<String, Integer> itemsCount;
         ArrayList<MenuItemModel> items;
+        Cart cart;
+        TextView text;
+
 
         public CartPageAdapter(ArrayList<MenuItemModel> items, HashMap<String, Integer> itemsCount, Context c, Cart cart, TextView text) {
             this.items = items;
             this.itemsCount = itemsCount;
             this.c = c;
             this.cart = cart;
-            this.text= text;
+            this.text = text;
 
         }
 
         @NonNull
         @Override
-        public CartItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-        {
+        public CartItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_single_item, parent, false);
             return new CartPageAdapter.CartItemHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull CartPageAdapter.CartItemHolder holder, int position)
-        {
-            View DelOne =  holder.constraintLayout.findViewById(R.id.CartDelOne);
-            View DelAll =  holder.constraintLayout.findViewById(R.id.CartDelAll);
+        public void onBindViewHolder(@NonNull CartPageAdapter.CartItemHolder holder,
+                                     int position) {
+            View DelOne = holder.constraintLayout.findViewById(R.id.CartDelOne);
+            View DelAll = holder.constraintLayout.findViewById(R.id.CartDelAll);
 
             // Get item parameters.
             MenuItemModel currentItem = items.get(position);
             int pos = holder.getAdapterPosition();
             int amount = itemsCount.get(currentItem.getName());
-            String amountText = "כמות "+amount;
+            String amountText = "כמות " + amount;
 
 
             // Can be changed to get an image based on item's name
@@ -289,38 +283,35 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
             DelOne.setOnClickListener(view -> myCart.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot ds : snapshot.getChildren())
-                    {
+
+                    for (DataSnapshot ds : snapshot.getChildren()) {
                         cart = ds.getValue(Cart.class);
-                        if (cart != null && Objects.equals(cart.userID, id))
-                        {
+                        if (cart != null && Objects.equals(cart.userID, id)) {
                             cart.getItems().remove(currentItem);
+
                             double price = Double.parseDouble(currentItem.getPrice());
                             cart.setPrice(cart.getPrice() - price);
                             cart.setCount(cart.getCount() - 1);
                             text.setText("תשלום: " + cart.getPrice());
                             String key = ds.getKey();
-                            if (cart.getCount() > 0)
-                            {
+
+
+                            if (cart.getCount() > 0) {
                                 FirebaseDatabase.getInstance().getReference().child("Carts").
                                         child(key)
                                         .setValue(cart);
-                            }
-                            else
-                            {
+                            } else {
+
                                 FirebaseDatabase.getInstance().getReference().child("Carts").
                                         child(key)
                                         .removeValue();
                             }
 
-                            if (amount == 1)
-                            {
+                            if (amount == 1) {
                                 itemsCount.remove(currentItem.getName());
                                 items.remove(currentItem);
                                 notifyItemRemoved(pos);
-                            }
-                            else
-                            {
+                            } else {
                                 itemsCount.put(currentItem.getName(), amount - 1);
                                 notifyItemChanged(pos);
                             }
@@ -339,14 +330,13 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
             DelAll.setOnClickListener(view -> myCart.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot ds : snapshot.getChildren())
-                    {
+
+                    for (DataSnapshot ds : snapshot.getChildren()) {
                         cart = ds.getValue(Cart.class);
-                        if (cart != null && Objects.equals(cart.userID, id))
-                        {
-                            while (cart.getItems().contains(currentItem))
-                            {
+                        if (cart != null && Objects.equals(cart.userID, id)) {
+                            while (cart.getItems().contains(currentItem)) {
                                 cart.getItems().remove(currentItem);
+
                                 double price = Double.parseDouble(currentItem.getPrice());
                                 cart.setPrice(cart.getPrice() - price);
                                 cart.setCount(cart.getCount() - 1);
@@ -366,7 +356,8 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                public void onCancelled(@NonNull DatabaseError
+                                                error) {
 
                 }
             }));
@@ -381,9 +372,8 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         /**
          * Class for a single item to load into the view holder.
          */
-        public static class CartItemHolder extends RecyclerView.ViewHolder
-        {
-//            public ImageView imageView;
+        public static class CartItemHolder extends RecyclerView.ViewHolder {
+            //            public ImageView imageView;
             public TextView name;
             public TextView amount;
             public TextView price;

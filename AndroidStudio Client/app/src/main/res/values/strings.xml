@@ -1,21 +1,23 @@
 <resources>
+    <!-- general -->
     <string name="app_name">Zuza\'s</string>
-
+    <string name="zuza_logo">zuza logo</string>
 
     <!-- Registration/login pages -->
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="register">Register</string>
-    <string name="login">Login</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="sign_in">Sign in</string>
+    <string name="username">שם משתמש</string>
+    <string name="password">סיסמה</string>
+    <string name="register">הרשמה</string>
+    <string name="login">התחברות</string>
+    <string name="forgot_password">שכחתי סיסמה</string>
+    <string name="sign_in">כניסה</string>
     <string name="zuza_s">Zuza\'s</string>
-    <string name="full_name">Full Name</string>
-    <string name="age">Age</string>
-    <string name="email">Email</string>
-    <string name="register_user">REGISTER USER</string>
-    <string name="enter_your_email">Enter Your Email</string>
-    <string name="reset_password">Reset Password</string>
+    <string name="full_name">שם מלא</string>
+    <string name="age">גיל</string>
+    <string name="email">מייל</string>
+    <string name="register_user">רשום משתמש חדש</string>
+    <string name="enter_your_email">הכנס כתובת אימייל</string>
+    <string name="reset_password">איפוס סיסמה</string>
+    <string name="restore_account">שחזור משתמש</string>
     <string name="facebook_app_id">3018310431648249</string>
     <string name="fb_login_protocol_scheme">fb3018310431648249</string>
     <string name="facebook_client_token">48ec3cf223794ce4c9677cef67bca291</string>
@@ -52,8 +54,26 @@
     <string name="edit_item_finish">סיום עריכת פריט</string>
     <string name="edit_item_menu">עריכת פריט</string>
     <string name="edit_item_remove">הסרת פריט נבחר</string>
-    <string name="account_settings">Account Settings</string>
-    <string name="edit_profile">Edit Profile</string>
+
+    <!-- Cart Page-->
+    <string name="make_order">בצע הזמנה</string>
+    <string name="previous_orders">הזמנות קודמות</string>
+    <string name="add_to_cart">הוסף לעגלה</string>
+    <string name="cart_del_all">מחק הכל</string>
+    <string name="cart_del_one">מחק אחד</string>
+
+    <!-- Profile Page-->
+    <string name="account_settings">הגדרות משתמש</string>
+    <string name="edit_profile">עריכת פרופיל</string>
+    <string name="new_full_name">שם מלא חדש</string>
+    <string name="new_age">גיל חדש</string>
+    <string name="phone_number">מס\' טלפון</string>
+    <string name="phone_hint">+972...</string>
+    <string name="change_profile_picture">החלפת תמונת פרופיל</string>
+    <string name="update_changes">שמירת שינויים</string>
+
+
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -143,5 +163,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
+    <!-- Order Page-->
+    <string name="order_details">פרטי הזמנה</string>
+    <string name="complete_order">השלם הזמנה</string>
+
 
 </resources>

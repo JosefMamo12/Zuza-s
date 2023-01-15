@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CartPage">
+    tools:context=".OrdersPage">
 
     <ImageView
         android:id="@+id/cart_zuza_logo"
@@ -15,58 +15,19 @@
         android:src="@drawable/zuzalogo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/CartAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="90dp"
-        android:minHeight="48dp"
-        android:text="לתשלום: 0"
-        android:textSize="26dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/include"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <Button
-        android:id="@+id/make_order"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="100dp"
-        android:text="@string/make_order"
-        android:backgroundTint="@color/Chestnut"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/CartAmount"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/view_user_orders"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="100dp"
-        android:text="@string/previous_orders"
-        android:backgroundTint="@color/Rifle_Green"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/CartAmount" />
 
     <ScrollView
 
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="160dp"
-        app:layout_constraintBottom_toTopOf="@+id/cart_zuza_logo"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cart_zuza_logo"
-        tools:context=".CartPage">
+        app:layout_constraintBottom_toTopOf="@+id/include"
+        tools:context=".OrdersPage">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -78,14 +39,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="150dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/cart_single_item" />
+                tools:listitem="@layout/single_order_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -94,7 +55,7 @@
     <include
         android:id="@+id/include"
         layout="@layout/navigation_bar"
-        android:layout_width="match_parent"
+        android:layout_width="410dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
