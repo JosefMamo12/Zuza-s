@@ -1,19 +1,18 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,11 +34,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
+    Retrofit retrofit;
+    ServerAPI api;
     private FirebaseAuth mAuth;
     private EditText editTextFullName, editTextAge, editTextEmail, editTextPassword;
     private ProgressBar progressBar;
-    Retrofit retrofit;
-    ServerAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +72,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 startActivity(new Intent(this, Login.class));
                 break;
             case R.id.registerUser:
-                registerUserApi();
-                finish();
+                boolean isValid = userValidation();
+                if (isValid) {
+                    registerUserApi();
+                    finish();
+                }
 //                registerUser();
                 break;
         }
@@ -86,7 +88,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         String password = editTextPassword.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
-        userValidation(email, password, age, fullName);
+
         progressBar.setVisibility(View.VISIBLE);
 
         MyRegisterRequest myRegisterRequest = new MyRegisterRequest(email, age, fullName, password);
@@ -112,74 +114,95 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
             }
         });
+
     }
 
 
+//    private void registerUser() {
+//        String email = editTextEmail.getText().toString().trim();
+//        String password = editTextPassword.getText().toString().trim();
+//        String age = editTextAge.getText().toString().trim();
+//        String fullName = editTextFullName.getText().toString().trim();
+//        boolean isValid = userValidation(email, password, age, fullName);
+//        if (isValid) {
+//            progressBar.setVisibility(View.VISIBLE);
+//            mAuth.createUserWithEmailAndPassword(email, password)
+//                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if (task.isSuccessful()) {
+//                                User user = new User(fullName, age, email, mAuth.getCurrentUser().getUid());
+//                                FirebaseDatabase.getInstance().getReference("Users")
+//                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                        .setValue(user).addOnCompleteListener(task1 -> {
+//                                            if (task1.isSuccessful()) {
+//                                                Toast.makeText(Register.this, "User has been registered successfully", Toast.LENGTH_SHORT).show();
+//                                                startActivity(new Intent(getApplicationContext(), HomePage.class));
+//                                                progressBar.setVisibility(View.GONE);
+//                                            } else {
+//                                                Toast.makeText(Register.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
+//                                                progressBar.setVisibility(View.GONE);
+//                                            }
+//
+//                                        });
+//                            } else {
+//                                Toast.makeText(Register.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
+//                                progressBar.setVisibility(View.GONE);
+//                            }
+//                        }
+//                    });
+//        }
+//    }
 
-    private void registerUser() {
+    private boolean userValidation() {
+
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String age = editTextAge.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();
-        userValidation(email, password, age, fullName);
 
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            User user = new User(fullName, age, email, mAuth.getCurrentUser().getUid());
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .setValue(user).addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            Toast.makeText(Register.this, "User has been registered successfully", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(getApplicationContext(), HomePage.class));
-                                            progressBar.setVisibility(View.GONE);
-                                        } else {
-                                            Toast.makeText(Register.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-
-                                    });
-                        } else {
-                            Toast.makeText(Register.this, "Failed to register! Try again!", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
-    }
-
-    private void userValidation(String email, String password, String age, String fullName) {
         if (fullName.isEmpty()) {
             editTextFullName.setError("Full Name is required");
             editTextFullName.requestFocus();
-            return;
+            return false;
         }
         if (age.isEmpty()) {
             editTextAge.setError("Age is required");
             editTextAge.requestFocus();
-            return;
+            return false;
         }
         if (password.isEmpty()) {
             editTextPassword.setError("Password is required");
             editTextPassword.requestFocus();
-            return;
+            return false;
         }
         if (email.isEmpty()) {
             editTextEmail.setError("Email is required");
             editTextEmail.requestFocus();
-            return;
+            return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Please provide valid email");
             editTextEmail.requestFocus();
-            return;
+            return false;
         }
         if (password.length() < 6) {
             editTextPassword.setError("Min password length should be 6 characters!");
             editTextPassword.requestFocus();
+            return false;
         }
+        try {
+            if (Integer.parseInt(age) < 0) {
+                editTextAge.setError("negative number is not an age");
+                editTextAge.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            editTextAge.setError("an integer is required");
+            editTextAge.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 }
