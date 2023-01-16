@@ -115,11 +115,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         String uid = mAuth.getCurrentUser().getUid();
         DatabaseReference userRef = userDatabase.getReference("Users");
         DatabaseReference uidRef = userRef.child(uid);
-        ValueEventListener eventListener = new ValueEventListener() {
+        uidRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                if (user != null && user.isAdmin()) {
+                if (user != null) {
                     if (user.getFullName() != null) {
                         fullName.setText(user.getFullName());
                     }
@@ -144,8 +144,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(Profile.this, error.getCode(), Toast.LENGTH_SHORT).show();
 
             }
-        };
-        uidRef.addListenerForSingleValueEvent(eventListener);
+        });
+
     }
 
     private void profilePageInitializer() {
