@@ -32,22 +32,19 @@ import java.util.Objects;
 
 public class CartPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
 
+    FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    RecyclerView cartItemsRecyc;
+    CartPageAdapter cartAdapter;
+    Cart cart;
+    ArrayList<MenuItemModel> items;
+    HashMap<String, Integer> itemsCount;
     private ImageView logInImg;
     private ImageView accountImg;
     private ImageView shoppingCart;
     private ImageView managerReport;
     private ImageView menuPage;
     private TextView totalPrice;
-
-    FirebaseAuth mAuth;
-    FirebaseDatabase database;
-    RecyclerView cartItemsRecyc;
-    CartPageAdapter cartAdapter;
-    Cart cart;
-
-
-    ArrayList<MenuItemModel> items;
-    HashMap<String, Integer> itemsCount;
 
     @Override
     protected void onStart() {
@@ -182,6 +179,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         switch (view.getId()) {
             case R.id.make_order:
                 //take all cart contents and make an order
+                initOrder();
 //                startActivity(new Intent(this, OrdersPage.class));
                 break;
             case R.id.view_user_orders:
@@ -214,6 +212,41 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         }
     }
 
+    private void initOrder() {
+        Query myCart = FirebaseDatabase.getInstance().getReference().child("Carts");
+        String id = FirebaseAuth.getInstance().getUid();
+        Context temp_ctx = this;
+        myCart.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    cart = ds.getValue(Cart.class);
+                    if (cart != null && Objects.equals(cart.getUserID(), id)) {
+                        //make an order
+                        long timestamp = System.currentTimeMillis();
+                        Order order = new Order(cart, timestamp);
+                        database.getReference().child("Orders").getRef().push().setValue(order);
+
+                        //delete cart
+                        String key = ds.getKey();
+                        FirebaseDatabase.getInstance().getReference().child("Carts").
+                                child(key)
+                                .removeValue();
+
+                        Toast.makeText(temp_ctx, "הזמנה נקלטה בהצלחה", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
 
     public void callback(int position, ArrayList<MenuItemModel> items) {
         cartAdapter = new CartPageAdapter(items, itemsCount, this, cart, totalPrice);
@@ -232,7 +265,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
 
     static class CartPageAdapter extends RecyclerView.Adapter<CartPageAdapter.CartItemHolder> {
-        double totalPrice = 0;
+        //        double totalPrice = 0;
         Context c;
         HashMap<String, Integer> itemsCount;
         ArrayList<MenuItemModel> items;
@@ -286,7 +319,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         cart = ds.getValue(Cart.class);
-                        if (cart != null && Objects.equals(cart.userID, id)) {
+                        if (cart != null && Objects.equals(cart.getUserID(), id)) {
                             cart.getItems().remove(currentItem);
 
                             double price = Double.parseDouble(currentItem.getPrice());
@@ -333,14 +366,14 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
 
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         cart = ds.getValue(Cart.class);
-                        if (cart != null && Objects.equals(cart.userID, id)) {
+                        if (cart != null && Objects.equals(cart.getUserID(), id)) {
                             while (cart.getItems().contains(currentItem)) {
                                 cart.getItems().remove(currentItem);
 
                                 double price = Double.parseDouble(currentItem.getPrice());
                                 cart.setPrice(cart.getPrice() - price);
                                 cart.setCount(cart.getCount() - 1);
-                                text.setText("תשלום: " + cart.getPrice());
+                                text.setText(String.format("תשלום: %s", cart.getPrice()));
                             }
 
                             String key = ds.getKey();

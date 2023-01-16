@@ -36,11 +36,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="100dp"
+        android:onClick="onClick"
         android:text="@string/make_order"
         android:backgroundTint="@color/Chestnut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/CartAmount"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="UsingOnClickInXml" />
 
     <Button
         android:id="@+id/view_user_orders"

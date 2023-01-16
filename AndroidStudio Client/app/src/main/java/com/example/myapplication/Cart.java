@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Cart
 {
-    ArrayList <MenuItemModel> items;
-    int count;
-    double price;
-    String userID;
+    private ArrayList <MenuItemModel> items;
+    private int count;
+    private double price;
+    private String userID;
 
     public Cart(){}
 

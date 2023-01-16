@@ -167,6 +167,7 @@
     <!-- Order Page-->
     <string name="order_details">פרטי הזמנה</string>
     <string name="complete_order">השלם הזמנה</string>
+    <string name="status_order">סטטוס הזמנה</string>
 
 
 </resources>

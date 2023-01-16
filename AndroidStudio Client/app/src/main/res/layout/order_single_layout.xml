@@ -85,6 +85,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <TextView
+            android:id="@+id/order_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/cardview_shadow_end_color"
+            android:text="@string/status_order"
+            android:textColor="#013220"
+            app:layout_constraintStart_toStartOf="@id/OrderName"
+            app:layout_constraintEnd_toEndOf="@id/OrderName"
+            app:layout_constraintTop_toBottomOf="@id/OrderName" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

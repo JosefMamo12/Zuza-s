@@ -8,8 +8,8 @@ public class Order {
     private int count;
     private double price;
     private String userID;
-    private Date order_time; //https://firebase.google.com/docs/reference/android/com/google/firebase/Timestamp?hl=he
-    private Date complete_time;
+    private long order_time;
+    private long complete_time;
     private boolean complete;
 
 
@@ -17,26 +17,30 @@ public class Order {
     }
 
 
-    public Order(Cart cart, Date timeStamp) {
+    public Order(Cart cart, long timeStamp) {
         this.items = cart.getItems();
         this.count = cart.getCount();
         this.price = cart.getPrice();
         this.userID = cart.getUserID();
         this.order_time = timeStamp;
-        this.complete_time = null;
+        this.complete_time = 0;
         this.complete = false;
     }
 
     @Override
     public String toString() {
-        return "Order{" +
+        String str = "Order{" +
+                "userID='" + userID + '\'' +
                 "items=" + items +
                 ", count=" + count +
                 ", price=" + price +
-                ", ordered on=" + order_time +
-                ", completed on=" + complete_time + //if not completed yet it's null
-                ", userID='" + userID + '\'' +
-                '}';
+                ", ordered on=" + getOrder_Date();
+        if (complete)
+            str += ", completed on=" + getComplete_Date() + '}';
+        else
+            str += ", completed on= 0 }";
+
+        return str;
     }
 
     public String getUserID() {
@@ -49,14 +53,6 @@ public class Order {
 
     public ArrayList<MenuItemModel> getItems() {
         return items;
-    }
-
-    public Date getOrder_time() {
-        return order_time;
-    }
-
-    public void setOrder_time(Date order_time) {
-        this.order_time = order_time;
     }
 
     public void setItems(ArrayList<MenuItemModel> items) {
@@ -79,6 +75,18 @@ public class Order {
         this.price = price;
     }
 
+    public void setOrder_time(long order_time) {
+        this.order_time = order_time;
+    }
+
+    public long getOrder_time() {
+        return order_time;
+    }
+
+    public Date getOrder_Date() {
+        return new Date(order_time);
+    }
+
     public boolean isComplete() {
         return complete;
     }
@@ -87,12 +95,16 @@ public class Order {
         this.complete = complete;
     }
 
-    public Date getComplete_time() {
-        return complete_time;
+    public Date getComplete_Date() {
+        return new Date(complete_time);
     }
 
-    public void setComplete_time(Date complete_time) {
+    public void setComplete_time(long complete_time) {
         this.complete_time = complete_time;
+    }
+
+    public long getComplete_time() {
+        return complete_time;
     }
 }
 

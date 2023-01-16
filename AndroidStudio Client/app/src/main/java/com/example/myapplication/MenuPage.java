@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.myapplication.Adapters.MenuCategoryAdapter;
+import com.example.myapplication.Adapters.MenuItemAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +28,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class MenuPage extends AppCompatActivity implements View.OnClickListener, UpdateMenuRecyclerView {
-    private ImageView logInImg, logOutImg, accountImg, homePageImg, shoppingCart, mangerReport;
+    private ImageView logInImg;
+    private ImageView accountImg;
+    private ImageView shoppingCart;
+    private ImageView managerReport;
     private Button addItemBtn, editItemBtn;
     ArrayList<MenuItemModel> items = new ArrayList<>();
     MenuItemAdapter menuItemAdapter;
@@ -106,7 +110,7 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             addItemBtn.setVisibility(View.INVISIBLE);
             editItemBtn.setVisibility(View.INVISIBLE);
             shoppingCart.setVisibility(View.VISIBLE);
-            mangerReport.setVisibility(View.INVISIBLE);
+            managerReport.setVisibility(View.INVISIBLE);
 //            findViewById(R.id.addToCart).setVisibility(View.INVISIBLE);
             return;
         }
@@ -122,13 +126,12 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
                     addItemBtn.setVisibility(View.VISIBLE);
                     editItemBtn.setVisibility(View.VISIBLE);
                     shoppingCart.setVisibility(View.INVISIBLE);
-                    mangerReport.setVisibility(View.VISIBLE);
+                    managerReport.setVisibility(View.VISIBLE);
                 } else {
-
                     addItemBtn.setVisibility(View.INVISIBLE);
                     editItemBtn.setVisibility(View.INVISIBLE);
                     shoppingCart.setVisibility(View.VISIBLE);
-                    mangerReport.setVisibility(View.INVISIBLE);
+                    managerReport.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -143,19 +146,19 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
     public void navBarInitializer() {
         mAuth = FirebaseAuth.getInstance();
         /* Image views of navBar*/
-        mangerReport = findViewById(R.id.report);
+        managerReport = findViewById(R.id.report);
         shoppingCart = findViewById(R.id.shop_cart);
         logInImg = findViewById(R.id.logInImg);
         accountImg = findViewById(R.id.accountImg);
-        logOutImg = findViewById(R.id.logOutImg);
-        homePageImg = findViewById(R.id.homeImg);
+        ImageView logOutImg = findViewById(R.id.logOutImg);
+        ImageView homePageImg = findViewById(R.id.homeImg);
         /* OnClick Listeners  */
         logInImg.setOnClickListener(this);
         accountImg.setOnClickListener(this);
         logOutImg.setOnClickListener(this);
         homePageImg.setOnClickListener(this);
         shoppingCart.setOnClickListener(this);
-        mangerReport.setOnClickListener(this);
+        managerReport.setOnClickListener(this);
 
     }
 

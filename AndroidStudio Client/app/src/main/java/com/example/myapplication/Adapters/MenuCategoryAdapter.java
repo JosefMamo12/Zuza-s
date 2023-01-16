@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -11,6 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.MenuCategoryModel;
+import com.example.myapplication.MenuItemModel;
+import com.example.myapplication.R;
+import com.example.myapplication.UpdateMenuRecyclerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

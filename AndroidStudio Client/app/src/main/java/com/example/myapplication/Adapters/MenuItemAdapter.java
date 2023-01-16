@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Cart;
+import com.example.myapplication.MenuItemModel;
+import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -132,8 +135,8 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
                         temp = new ArrayList<>();
                     }
                     temp.add(item);
-                    double price = Double.parseDouble(item.getPrice()) + data.price;
-                    Cart updated = new Cart(temp, data.count + 1, price, data.userID);
+                    double price = Double.parseDouble(item.getPrice()) + data.getPrice();
+                    Cart updated = new Cart(temp, data.getCount() + 1, price, data.getUserID());
 
                     FirebaseDatabase.getInstance().getReference().child("Carts").
                             child(key)
