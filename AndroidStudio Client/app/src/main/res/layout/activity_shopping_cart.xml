@@ -51,11 +51,13 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="100dp"
+        android:onClick="onClick"
         android:text="@string/previous_orders"
         android:backgroundTint="@color/Rifle_Green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/CartAmount" />
+        app:layout_constraintStart_toEndOf="@+id/CartAmount"
+        tools:ignore="UsingOnClickInXml" />
 
     <ScrollView
 

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Models;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;

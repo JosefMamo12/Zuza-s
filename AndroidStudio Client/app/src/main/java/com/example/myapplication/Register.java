@@ -95,7 +95,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         Call<Void> call = api.register(myRegisterRequest);
         call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(Register.this, "Register succeed", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);

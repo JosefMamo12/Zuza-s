@@ -17,6 +17,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Models.Cart;
+import com.example.myapplication.Models.MenuItemModel;
+import com.example.myapplication.Models.Order;
+import com.example.myapplication.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -180,7 +184,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
             case R.id.make_order:
                 //take all cart contents and make an order
                 initOrder();
-//                startActivity(new Intent(this, OrdersPage.class));
+                startActivity(new Intent(this, OrdersPage.class));
                 break;
             case R.id.view_user_orders:
                 startActivity(new Intent(this, OrdersPage.class));

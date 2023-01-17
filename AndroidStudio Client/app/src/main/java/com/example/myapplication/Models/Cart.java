@@ -1,4 +1,6 @@
-package com.example.myapplication;
+package com.example.myapplication.Models;
+
+import com.example.myapplication.Models.MenuItemModel;
 
 import java.util.ArrayList;
 
