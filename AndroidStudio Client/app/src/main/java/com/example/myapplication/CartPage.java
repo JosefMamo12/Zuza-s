@@ -66,7 +66,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
         checkIfAdminConnected();
         items = new ArrayList<>();
         itemsCount = new HashMap<>();
-
+        shoppingCart.setImageResource(R.drawable.ic_baseline_shopping_cart_36_black);
         Context temp_ctx = this;
         updateData(temp_ctx);
     }
@@ -120,7 +120,7 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                if (user != null && user.isAdmin()) {
+                if (user != null) {
                     if (user.isAdmin()) {
                         shoppingCart.setVisibility(View.INVISIBLE);
                         managerReport.setVisibility(View.VISIBLE);

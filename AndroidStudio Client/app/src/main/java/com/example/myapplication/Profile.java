@@ -53,8 +53,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     private TextView fullName, age, email, editProfile;
     private ImageView logInImg;
     private ImageView accountImg;
-    private ImageView logOutImg;
-    private ImageView menuFoodImage;
     private TextView phoneNumber;
     private ImageView managerReport;
     private ImageView shoppingCart;
@@ -66,7 +64,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
         navBarInitializer();
         profilePageInitializer();
         checkIfAdminConnected();
@@ -90,7 +87,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                if (user != null && user.isAdmin()) {
+                if (user != null) {
                     if (user.isAdmin()) {
                         shoppingCart.setVisibility(View.INVISIBLE);
                         managerReport.setVisibility(View.VISIBLE);
@@ -177,6 +174,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
         ImageView homeImg = findViewById(R.id.homeImg);
         logInImg = findViewById(R.id.logInImg);
         accountImg = findViewById(R.id.accountImg);
+        accountImg.setImageResource(R.drawable.ic_baseline_account_circle_36_black);
 
         ImageView logOutImg = findViewById(R.id.logOutImg);
         ImageView menuFoodImg = findViewById(R.id.menuFoodImg);

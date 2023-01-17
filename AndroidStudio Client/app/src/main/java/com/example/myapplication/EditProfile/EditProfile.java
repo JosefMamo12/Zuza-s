@@ -200,6 +200,7 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
         ImageView homeImg = findViewById(R.id.homeImg);
         logInImg = findViewById(R.id.logInImg);
         accountImg = findViewById(R.id.accountImg);
+        accountImg.setImageResource(R.drawable.ic_baseline_account_circle_36_black);
         shoppingCart = findViewById(R.id.shop_cart);
         managerReport = findViewById(R.id.report);
         ImageView logOutImg = findViewById(R.id.logOutImg);
@@ -333,7 +334,7 @@ public class EditProfile extends AppCompatActivity implements OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                if (user != null && user.isAdmin()) {
+                if (user != null) {
                     if (user.isAdmin()) {
                         shoppingCart.setVisibility(View.INVISIBLE);
                         managerReport.setVisibility(View.VISIBLE);

@@ -75,6 +75,8 @@ public class HomePage extends AppCompatActivity implements View.OnClickListener 
 
         // Download and cache all the data from menu items. (Shouldn't weigh too much)
         FirebaseDatabase.getInstance().getReference("menuItems").keepSynced(true);
+        ImageView imageView = findViewById(R.id.homeImg);
+        imageView.setImageResource(R.drawable.ic_baseline_home_24_black);
 
 
         navBarInitializer();

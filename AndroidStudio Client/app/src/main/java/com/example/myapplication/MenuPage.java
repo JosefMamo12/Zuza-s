@@ -54,7 +54,8 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
         setContentView(R.layout.activity_menu);
 //       ActivityMenuBinding activityMenuBinding =DataBindingUtil.setContentView(this, R.layout.activity_menu);
 //        ActivityMenuBinding activityMenuBinding = ActivityMenuBinding.inflate(getLayoutInflater());
-
+        ImageView imageView = findViewById(R.id.menuFoodImg);
+        imageView.setImageResource(R.drawable.ic_base_line_res_menu_black);
         database = FirebaseDatabase.getInstance();
         addItemBtn = findViewById(R.id.menu_add_item_manager);
         editItemBtn = findViewById(R.id.menu_edit_item_manager);
