@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Cart;
-import com.example.myapplication.MenuItemModel;
+import com.example.myapplication.Models.Cart;
+import com.example.myapplication.Models.MenuItemModel;
 import com.example.myapplication.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

@@ -1,5 +1,7 @@
 package com.example.myapplication.EditProfile;
 
+import com.example.myapplication.Models.EditProfileModel;
+
 import java.util.HashMap;
 
 public class EditProfileController {

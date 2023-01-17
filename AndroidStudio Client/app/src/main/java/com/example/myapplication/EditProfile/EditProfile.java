@@ -23,7 +23,7 @@ import com.example.myapplication.HomePage;
 import com.example.myapplication.MenuPage;
 import com.example.myapplication.Profile;
 import com.example.myapplication.R;
-import com.example.myapplication.User;
+import com.example.myapplication.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

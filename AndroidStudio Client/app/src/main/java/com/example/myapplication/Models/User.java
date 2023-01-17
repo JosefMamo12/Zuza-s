@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Models;
 
 /**
  * User class getting for upload/download data that given from the firebase database.

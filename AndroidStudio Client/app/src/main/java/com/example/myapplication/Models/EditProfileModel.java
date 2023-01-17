@@ -1,9 +1,10 @@
-package com.example.myapplication.EditProfile;
+package com.example.myapplication.Models;
 
 
 import androidx.annotation.NonNull;
 
-import com.example.myapplication.User;
+import com.example.myapplication.EditProfile.EditProfileCallBack;
+import com.example.myapplication.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
