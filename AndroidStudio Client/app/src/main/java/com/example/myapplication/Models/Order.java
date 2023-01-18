@@ -1,7 +1,6 @@
 package com.example.myapplication.Models;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Order {
     private ArrayList<MenuItemModel> items;
@@ -34,9 +33,9 @@ public class Order {
                 "items=" + items +
                 ", count=" + count +
                 ", price=" + price +
-                ", ordered on=" + getOrder_Date();
+                ", ordered on=" + getOrder_time();
         if (complete)
-            str += ", completed on=" + getComplete_Date() + '}';
+            str += ", completed on=" + getComplete_time() + '}';
         else
             str += ", completed on= 0 }";
 
@@ -83,20 +82,12 @@ public class Order {
         return order_time;
     }
 
-    public Date getOrder_Date() {
-        return new Date(order_time);
-    }
-
     public boolean isComplete() {
         return complete;
     }
 
     public void setComplete(boolean complete) {
         this.complete = complete;
-    }
-
-    public Date getComplete_Date() {
-        return new Date(complete_time);
     }
 
     public void setComplete_time(long complete_time) {

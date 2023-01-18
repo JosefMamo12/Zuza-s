@@ -18,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Models.MenuItemModel;
 import com.example.myapplication.Models.Order;
 import com.example.myapplication.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +30,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -49,6 +50,7 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
     private ImageView managerReport;
     //        private TextView totalPrice;
     private Order order;
+    private static boolean isAdmin;
 
     @Override
     protected void onStart() {
@@ -63,6 +65,7 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
         if (mAuth.getUid() == null) return;
         database = FirebaseDatabase.getInstance();
         setContentView(R.layout.activity_orders);
+
         navBarInitializer();
         checkIfConnected();
         checkIfAdminConnected();
@@ -74,24 +77,24 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
     }
 
     private void updateData(Context temp_ctx) {
-//        Query getOrders = database.getReference().child("Orders");
-        database.getReference().child("Orders").orderByChild("userID").equalTo(mAuth.getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        Query getOrders = database.getReference().child("Orders").orderByChild("userID").equalTo(mAuth.getUid());
+        if (isAdmin){
+            getOrders = database.getReference().child("Orders").orderByChild("complete").equalTo(false);
+        }
+        getOrders.addListenerForSingleValueEvent(new ValueEventListener() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot data : snapshot.getChildren()) {
                             order = data.getValue(Order.class);
-
                             if (order != null) {
                                 items.add(order);
                             }
-                            ordersRecycle = findViewById(R.id.cart_items);
-                            ordersAdapter = new OrdersPageAdapter(items, temp_ctx);
-                            ordersRecycle.setLayoutManager(new LinearLayoutManager(temp_ctx, LinearLayoutManager.VERTICAL, false));
-                            ordersRecycle.setAdapter(ordersAdapter);
-                            break;
                         }
+                        ordersRecycle = findViewById(R.id.cart_items);
+                        ordersAdapter = new OrdersPageAdapter(items, temp_ctx);
+                        ordersRecycle.setLayoutManager(new LinearLayoutManager(temp_ctx, LinearLayoutManager.VERTICAL, false));
+                        ordersRecycle.setAdapter(ordersAdapter);
                     }
 
                     @Override
@@ -116,10 +119,12 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
                 User user = snapshot.getValue(User.class);
                 assert user != null;
                 if (user.isAdmin()) {
+                    isAdmin = true;
                     shoppingCart.setVisibility(View.INVISIBLE);
                     managerReport.setVisibility(View.VISIBLE);
 
                 } else {
+                    isAdmin = false;
                     shoppingCart.setVisibility(View.VISIBLE);
                     managerReport.setVisibility(View.INVISIBLE);
                 }
@@ -186,6 +191,7 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
                     mAuth.signOut();
                     checkIfAdminConnected();
                     checkIfConnected();
+                    startActivity(new Intent(getApplicationContext(), HomePage.class));
                 } else {
                     Toast.makeText(this, "Please login before logout", Toast.LENGTH_SHORT).show();
                 }
@@ -233,8 +239,17 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
         @Override
         public void onBindViewHolder(@NonNull OrdersPageAdapter.SingleOrderHolder holder,
                                      int position) {
-            View confirm = holder.constraintLayout.findViewById(R.id.order_complete);
-            View DelAll = holder.constraintLayout.findViewById(R.id.CartDelAll);
+            View confirm = holder.constraintLayout.findViewById(R.id.order_setComplete);
+            View status = holder.constraintLayout.findViewById(R.id.order_status);
+
+            if (isAdmin) {
+                confirm.setVisibility(View.VISIBLE);
+                status.setVisibility(View.INVISIBLE);
+            }
+            else {
+                confirm.setVisibility(View.INVISIBLE);
+                status.setVisibility(View.VISIBLE);
+            }
 
             // Get item parameters.
             Order currentItem = items.get(position);
@@ -245,11 +260,19 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
 
             // Can be changed to get an image based on item's name
 //            holder.imageView.setImageResource(R.drawable.z_logo);
-//        holder.name.setText(currentItem.getName()); //TODO: need an order name/id
+            String pattern = "dd-MM-yy HH:mm";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            String date = simpleDateFormat.format(new Date(currentItem.getOrder_time()));
+
+            holder.name.setText(date); //TODO: need an order name/id
             holder.amount.setText(amountText);
             DecimalFormat df = new DecimalFormat("0.00");
             String totalPrice = df.format(currentItem.getPrice());
             holder.price.setText(totalPrice);
+            if (currentItem.isComplete())
+                holder.status.setText("הזמנה מוכנה");
+            else
+                holder.status.setText("הזמנה נשלחה");
 //            totalPrice.setText(String.valueOf(jCart.getPrice()));
 
             String id = FirebaseAuth.getInstance().getUid();
@@ -262,8 +285,12 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
 
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         Order order = ds.getValue(Order.class);
-                        if (order != null && Objects.equals(order, currentItem)) {
+                        if (order == null) continue;
 
+                        boolean isSameOrder = Objects.equals(currentItem.getUserID(), order.getUserID()) &&
+                                currentItem.getOrder_time() == order.getOrder_time();
+
+                        if (isSameOrder) {
                             String key = ds.getKey();
                             order.setComplete(true);
                             order.setComplete_time(System.currentTimeMillis());
@@ -272,6 +299,8 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
                                     child(key)
                                     .setValue(order);
 
+                            items.remove(order);
+                            notifyItemRemoved(pos);
                         }
 
                     }
@@ -306,12 +335,11 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
 
             public SingleOrderHolder(@NonNull View itemView) {
                 super(itemView);
-//                imageView = itemView.findViewById(R.id.cart_zuza_logo);
                 name = itemView.findViewById(R.id.OrderName);
                 amount = itemView.findViewById(R.id.OrderItemsAmount);
                 price = itemView.findViewById(R.id.TotalOrderPrice);
-                status = itemView.findViewById(R.id.order_status);
-                confirm = itemView.findViewById(R.id.order_complete);
+                status = itemView.findViewById(R.id.order_status); //
+                confirm = itemView.findViewById(R.id.order_setComplete); //
                 viewDetails = itemView.findViewById(R.id.show_order);
                 constraintLayout = itemView.findViewById(R.id.constraintLayout);
             }

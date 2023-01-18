@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import com.example.myapplication.Models.MenuItemModel;
+
 import junit.framework.TestCase;
 
 import org.junit.Assert;

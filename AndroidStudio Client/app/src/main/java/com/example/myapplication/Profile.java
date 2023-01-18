@@ -241,6 +241,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
                     startActivity(new Intent(this, CartPage.class));
                 }
                 break;
+            case R.id.report:
+                startActivity(new Intent(getApplicationContext(), OrdersPage.class));
+                break;
         }
 
     }

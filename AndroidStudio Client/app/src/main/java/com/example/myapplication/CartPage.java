@@ -130,8 +130,8 @@ public class CartPage extends AppCompatActivity implements View.OnClickListener,
                         managerReport.setVisibility(View.VISIBLE);
 
                     } else {
-                        shoppingCart.setVisibility(View.VISIBLE);
                         managerReport.setVisibility(View.INVISIBLE);
+                        shoppingCart.setVisibility(View.VISIBLE);
                     }
                 }
             }

@@ -187,6 +187,9 @@ public class MenuPage extends AppCompatActivity implements View.OnClickListener,
             case R.id.menu_edit_item_manager:
                 startActivity(new Intent(this, MenuItemEdit.class));
                 break;
+            case R.id.report:
+                startActivity(new Intent(this, OrdersPage.class));
+                break;
             case R.id.homeImg:
                 finish();
                 checkIfConnected();
