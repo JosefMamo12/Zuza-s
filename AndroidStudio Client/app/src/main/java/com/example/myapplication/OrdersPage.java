@@ -49,6 +49,7 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
     private ImageView accountImg;
     private ImageView shoppingCart;
     private ImageView managerReport;
+    private ImageView menuPage;
     //        private TextView totalPrice;
     private Order order;
     private static boolean isAdmin;
@@ -148,9 +149,12 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
         accountImg = findViewById(R.id.accountImg);
         ImageView logOutImg = findViewById(R.id.logOutImg);
         ImageView homePageImg = findViewById(R.id.homeImg);
+        menuPage = findViewById(R.id.menuFoodImg);
+
         /* OnClick Listeners  */
         logInImg.setOnClickListener(this);
         accountImg.setOnClickListener(this);
+        menuPage.setOnClickListener(this);
         logOutImg.setOnClickListener(this);
         homePageImg.setOnClickListener(this);
         shoppingCart.setOnClickListener(this);
@@ -176,7 +180,7 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
             case R.id.shop_cart:
                 startActivity(new Intent(this, CartPage.class));
                 break;
-            case R.id.menu_page:
+            case R.id.menuFoodImg:
                 startActivity(new Intent(this, MenuPage.class));
                 break;
             case R.id.homeImg:

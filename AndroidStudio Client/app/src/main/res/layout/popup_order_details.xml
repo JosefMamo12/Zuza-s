@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="50dp"
-    tools:context=".OrdersPage">
+    tools:context=".OrdersPage"
+    android:background="@color/whitish">
 
     <LinearLayout
         android:id="@+id/info_bar"
