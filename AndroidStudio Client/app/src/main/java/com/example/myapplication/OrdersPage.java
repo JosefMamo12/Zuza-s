@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -82,26 +83,26 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
             getOrders = database.getReference().child("Orders").orderByChild("complete").equalTo(false);
         }
         getOrders.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot data : snapshot.getChildren()) {
-                            order = data.getValue(Order.class);
-                            if (order != null) {
-                                items.add(order);
-                            }
-                        }
-                        ordersRecycle = findViewById(R.id.cart_items);
-                        ordersAdapter = new OrdersPageAdapter(items, temp_ctx);
-                        ordersRecycle.setLayoutManager(new LinearLayoutManager(temp_ctx, LinearLayoutManager.VERTICAL, false));
-                        ordersRecycle.setAdapter(ordersAdapter);
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    order = data.getValue(Order.class);
+                    if (order != null) {
+                        items.add(order);
                     }
+                }
+                ordersRecycle = findViewById(R.id.cart_items);
+                ordersAdapter = new OrdersPageAdapter(items, temp_ctx);
+                ordersRecycle.setLayoutManager(new LinearLayoutManager(temp_ctx, LinearLayoutManager.VERTICAL, false));
+                ordersRecycle.setAdapter(ordersAdapter);
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+            }
+        });
     }
 
     private void checkIfAdminConnected() {
@@ -241,6 +242,9 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
                                      int position) {
             View confirm = holder.constraintLayout.findViewById(R.id.order_setComplete);
             View status = holder.constraintLayout.findViewById(R.id.order_status);
+            Button viewOrder = holder.constraintLayout.findViewById(R.id.show_order);
+
+
 
             if (isAdmin) {
                 confirm.setVisibility(View.VISIBLE);
@@ -257,6 +261,12 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
             int amount = currentItem.getCount();
             String amountText = amount + " פריטים";
 
+            Intent in = new Intent(c, PopupOrder.class);
+            Bundle b = new Bundle();
+            b.putLong("date", currentItem.getOrder_time());
+            b.putString("id", currentItem.getUserID());
+            in.putExtras(b);
+            viewOrder.setOnClickListener(view -> c.startActivity(in));
 
             // Can be changed to get an image based on item's name
 //            holder.imageView.setImageResource(R.drawable.z_logo);
@@ -346,4 +356,3 @@ public class OrdersPage extends AppCompatActivity implements View.OnClickListene
         }
     }
 }
-
